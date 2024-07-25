@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import io from 'socket.io-client';
 
-const socket = io('http://http://localhost:8081'); // 서버 IP 주소를 여기에 입력하세요
+const socket = io('http://http://localhost:8081'); 
 
 export default function MessagesScreen() {
   const [messages, setMessages] = useState([]);
