@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Button, Image, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 export default function AddCardScreen({ route, navigation }) {
@@ -52,7 +52,7 @@ export default function AddCardScreen({ route, navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>새 카드 추가</Text>
       <TextInput
         style={styles.input}
@@ -92,59 +92,64 @@ export default function AddCardScreen({ route, navigation }) {
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>카드 추가</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 16,
     backgroundColor: '#fff',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 24,
     textAlign: 'center',
+    color: '#333',
   },
   input: {
-    height: 40,
+    height: 48,
+    width: '100%',
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 12,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    marginBottom: 16,
     backgroundColor: '#f9f9f9',
   },
   imagePicker: {
     backgroundColor: '#007BFF',
-    padding: 10,
-    borderRadius: 8,
+    padding: 12,
+    borderRadius: 12,
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
+    width: '100%',
   },
   imagePickerText: {
     color: '#fff',
     fontSize: 16,
   },
   image: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     alignSelf: 'center',
-    marginVertical: 16,
+    marginVertical: 24,
   },
   button: {
     backgroundColor: '#007BFF',
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: 'center',
+    width: '100%',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

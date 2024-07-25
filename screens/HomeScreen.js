@@ -31,10 +31,12 @@ export default function HomeScreen({ navigation }) {
           <MaterialIcons name="attach-money" size={24} color="orange" />
           <Text style={styles.coinText}>14,000</Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-          <MaterialIcons name="search" size={24} color="black" />
-        </TouchableOpacity>
-        <MaterialIcons name="notifications-none" size={24} color="black" />
+        <View style={styles.iconContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+            <MaterialIcons name="search" size={24} color="black" />
+          </TouchableOpacity>
+          <MaterialIcons name="notifications-none" size={24} color="black" />
+        </View>
       </View>
 
       <View style={styles.tabContainer}>
@@ -113,15 +115,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 8,
   },
-  icon: {
-    fontSize: 24,
-    marginHorizontal: 8,
-  },
-  profileIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginHorizontal: 8,
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   tabContainer: {
     backgroundColor: '#fff',
