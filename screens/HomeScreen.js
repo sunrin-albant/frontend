@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FavoriteIcon from '../components/FavoriteIcon';
 
 export default function HomeScreen({ navigation }) {
   const [data, setData] = useState([
-    { id: 1, username: 'user1', title: 'title1', tags: ['심부름', '테스트1', '테스트2'], date: '2024.07.24', price: 3000, image: null },
-    { id: 2, username: 'user2', title: 'title2', tags: ['심부름', '테스트1', '테스트2'], date: '2024.07.24', price: 3000, image: null },
-    { id: 3, username: 'user3', title: 'title3', tags: ['심부름', '테스트1', '테스트2'], date: '2024.07.24', price: 3000, image: null },
+    { id: 1, username: 'user1', title: 'title1', tags: ['심부름', '기타'], date: '2024.07.24', price: 3000, image: 'https://example.com/image1.jpg' },
+    { id: 2, username: 'user2', title: 'title2', tags: ['심부름', '기타'], date: '2024.07.24', price: 3000, image: 'https://example.com/image2.jpg' },
+    { id: 3, username: 'user3', title: 'title3', tags: ['심부름', '기타'], date: '2024.07.24', price: 3000, image: 'https://example.com/image3.jpg' },
   ]);
 
   const handleFavoritePress = (index) => {
@@ -28,27 +28,36 @@ export default function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.coinContainer}>
-          <MaterialIcons name="attach-money" size={24} color="orange" />
+          <MaterialIcons name="attach-money" size={24} color="gold" />
           <Text style={styles.coinText}>14,000</Text>
         </View>
         <View style={styles.iconContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-            <MaterialIcons name="search" size={24} color="black" />
+            <MaterialIcons name="search" size={24} color="white" />
           </TouchableOpacity>
-          <MaterialIcons name="notifications-none" size={24} color="black" />
+          <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+            <MaterialIcons name="notifications-none" size={24} color="white" />
+          </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.tabContainer}>
-        <ScrollView horizontal contentContainerStyle={styles.tabContentContainer} showsHorizontalScrollIndicator={false}>
-          <TouchableOpacity style={styles.menuTab}>
-            <MaterialIcons name="menu" size={24} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.tab}><Text style={styles.tabText}>심부름</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.tab}><Text style={styles.tabText}>테스트1</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.tab}><Text style={styles.tabText}>테스트2</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.tab}><Text style={styles.tabText}>테스트3</Text></TouchableOpacity>
-        </ScrollView>
+        <FlatList
+          horizontal
+          contentContainerStyle={styles.tabContentContainer}
+          showsHorizontalScrollIndicator={false}
+          data={[
+            { key: '심부름' },
+            { key: '테스트1' },
+            { key: '테스트2' },
+            { key: '테스트3' },
+          ]}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.tab}>
+              <Text style={styles.tabText}>{item.key}</Text>
+            </TouchableOpacity>
+          )}
+        />
       </View>
 
       <FlatList
@@ -62,7 +71,9 @@ export default function HomeScreen({ navigation }) {
               {item.image ? (
                 <Image source={{ uri: item.image }} style={styles.imagePlaceholder} />
               ) : (
-                <View style={styles.imagePlaceholder} />
+                <View style={styles.imagePlaceholder}>
+                  <MaterialIcons name="photo" size={40} color="#666" />
+                </View>
               )}
               <View style={styles.textContainer}>
                 <Text style={styles.username}>{item.username}</Text>
@@ -94,7 +105,7 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
@@ -104,7 +115,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#1c1c1c',
   },
   coinContainer: {
     flexDirection: 'row',
@@ -113,6 +124,7 @@ const styles = StyleSheet.create({
   coinText: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: 'white',
     marginLeft: 8,
   },
   iconContainer: {
@@ -120,21 +132,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1c1c1c',
     paddingVertical: 10,
   },
   tabContentContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-  },
-  menuTab: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    backgroundColor: '#333',
-    borderRadius: 8,
-    marginHorizontal: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   tab: {
     paddingVertical: 8,
@@ -159,36 +162,40 @@ const styles = StyleSheet.create({
     padding: 16,
     marginVertical: 8,
     marginHorizontal: 16,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
+    backgroundColor: '#424242',
+    borderRadius: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
+    width: '90%', 
   },
   cardLeft: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   imagePlaceholder: {
-    width: 50,
-    height: 50,
-    backgroundColor: '#ccc',
-    borderRadius: 25,
+    width: 80, 
+    height: 80, 
+    backgroundColor: '#666',
+    borderRadius: 8,
     marginRight: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textContainer: {
     flex: 1,
   },
   username: {
     fontSize: 14,
-    color: '#999',
+    color: '#B3B3B3',
     marginBottom: 4,
   },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#FFFFFF',
     marginBottom: 8,
   },
   tagContainer: {
@@ -196,16 +203,16 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   tag: {
-    backgroundColor: '#333',
-    color: '#fff',
-    paddingVertical: 2,
+    backgroundColor: '#FFD700',
+    color: '#333333',
+    paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 12,
     marginRight: 4,
   },
   date: {
     fontSize: 12,
-    color: '#333',
+    color: '#B3B3B3',
     marginBottom: 4,
   },
   cardRight: {
@@ -214,20 +221,19 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#FFD700',
     marginBottom: 8,
   },
   fab: {
     position: 'absolute',
     bottom: 80,
     right: 16,
-    backgroundColor: '#000',
+    backgroundColor: '#FFD700',
     width: 56,
     height: 56,
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
-    opacity: 0.8,
   },
   fabIcon: {
     color: 'white',
