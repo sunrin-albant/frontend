@@ -132,6 +132,7 @@ const HomeScreen = ({ navigation }) => {
               )}
               keyExtractor={(item) => item.id.toString()}
               contentContainerStyle={styles.contentContainer}
+              style={styles.list}
             />
 
             <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('AddCard', { handleAddCard })}>
@@ -241,6 +242,10 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  list: {
+    flex: 1,
+    width: '100%',
+  },
   card: {
     backgroundColor: '#333333',
     borderRadius: 8,
@@ -327,7 +332,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   fab: {
-    position: 'absolute',
+    position: 'fixed',
     bottom: 80,
     right: 16,
     backgroundColor: '#FCDC2A',
@@ -344,7 +349,7 @@ const styles = StyleSheet.create({
     height: 60,
     width: '100%',
     backgroundColor: '#000000',
-    position: 'absolute',
+    position: 'fixed',
     bottom: 0,
     borderTopColor: '#FCDC2A',
     borderTopWidth: 2,
