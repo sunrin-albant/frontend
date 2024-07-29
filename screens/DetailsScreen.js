@@ -51,15 +51,7 @@ export default function DetailsScreen({ route, navigation }) {
               <Text key={i} style={styles.tag}>{tag}</Text>
             ))}
           </View>
-          <Text style={styles.description}>
-            구매후 세번정도 착용{'\n'}
-            오염없고 하자없음{'\n'}
-            집 청소중인데 스타일안맞아서 판매중{'\n'}
-            23만정도 주고 삿던거같음{'\n'}
-            사이즈는 xxL입니다{'\n'}
-            좀작게나와서{'\n'}
-            키 184
-          </Text>
+          <Text style={styles.description}>{item.content}</Text>
         </View>
       </ScrollView>
 
@@ -177,15 +169,18 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#1c1c1c',
+    backgroundColor: '#FFD700',
     paddingVertical: 10,
     paddingHorizontal: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   chatButton: {
     backgroundColor: '#FFD700',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
+    width: '100%',
   },
   chatButtonText: {
     fontSize: 16,
