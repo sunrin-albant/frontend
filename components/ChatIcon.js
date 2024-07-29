@@ -1,4 +1,3 @@
-// components/ChatIcon.js
 import React from 'react';
 import Svg, { Mask, Rect, G, Path } from 'react-native-svg';
 

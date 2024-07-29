@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Dimensions, Image }
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CalendarIcon from '../components/CalendarIcon';
 import AddIcon from '../components/AddIcon';
-import HomeIcon from '../components/HomeIcon'; // HomeIcon 컴포넌트 임포트
-import ChatIcon from '../components/ChatIcon'; // ChatIcon 컴포넌트 임포트
+import HomeIcon from '../components/HomeIcon'; 
+import ChatIcon from '../components/ChatIcon'; 
 
 const { width } = Dimensions.get('window');
 
@@ -161,7 +161,7 @@ const HomeScreen = ({ navigation }) => {
       {renderScreen()}
       <View style={styles.navigationBar}>
         <TouchableOpacity onPress={() => setCurrentScreen('Home')} style={styles.navItem}>
-          <HomeIcon fill="#FCFCFC" /> {/* 색상을 고정 */}
+          <HomeIcon fill="#FCFCFC" /> {}
           <Text style={[styles.navText, currentScreen === 'Home' && styles.activeNavText]}>홈</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setCurrentScreen('Messages')} style={styles.navItem}>
