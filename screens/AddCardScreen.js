@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useFocusEffect } from '@react-navigation/native';
+import CoinIcon from '../assets/Coin.png';
+import BackIcon from '../components/BackIcon';
+import ImagePickerIcon from '../components/ImagePickerIcon';
 
 export default function AddCardScreen({ route, navigation }) {
   const { handleAddCard } = route.params;
@@ -13,6 +17,32 @@ export default function AddCardScreen({ route, navigation }) {
   const [date, setDate] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const parentNavigator = navigation.getParent();
+      if (parentNavigator) {
+        parentNavigator.setOptions({ tabBarStyle: { display: 'none' } });
+      }
+
+      return () => {
+        if (parentNavigator) {
+          parentNavigator.setOptions({
+            tabBarStyle: {
+              backgroundColor: 'black',
+              borderTopColor: '#FCDC2A',
+              borderTopWidth: 2,
+              borderTopLeftRadius: 15,
+              borderTopRightRadius: 15,
+              height: 70,
+              paddingBottom: 10,
+              display: 'flex',
+            },
+          });
+        }
+      };
+    }, [navigation])
+  );
 
   const handleTagPress = (tag) => {
     if (tags.includes(tag)) {
@@ -67,105 +97,132 @@ export default function AddCardScreen({ route, navigation }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <MaterialIcons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
-        <View style={styles.coinContainer}>
-          <MaterialIcons name="attach-money" size={24} color="gold" />
-          <Text style={styles.coinText}>14,000</Text>
-        </View>
-        <TouchableOpacity>
-          <MaterialIcons name="notifications-none" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-        {image ? (
-          <Image source={{ uri: image }} style={styles.image} />
-        ) : (
-          <MaterialIcons name="photo-camera" size={40} color="#666" />
-        )}
-      </TouchableOpacity>
-      <TextInput
-        style={styles.input}
-        placeholder="제목"
-        placeholderTextColor="#666"
-        value={title}
-        onChangeText={setTitle}
-      />
-      <TextInput
-        style={[styles.input, styles.textArea]}
-        placeholder="본문을 입력해 주세요."
-        placeholderTextColor="#666"
-        value={content}
-        onChangeText={setContent}
-        multiline
-      />
-      <View style={styles.tagContainer}>
-        {['심부름', '개발', '디자인', '기타'].map(tag => (
-          <TouchableOpacity
-            key={tag}
-            style={[styles.tag, tags.includes(tag) && styles.selectedTag]}
-            onPress={() => handleTagPress(tag)}
-          >
-            <Text style={[styles.tagText, tags.includes(tag) && styles.selectedTagText]}>{tag}</Text>
+    <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <BackIcon />
+            </TouchableOpacity>
+            <View style={styles.coinContainer}>
+              <Image source={CoinIcon} style={styles.coinIcon} />
+              <Text style={styles.coinText}>14,000</Text>
+            </View>
+            <TouchableOpacity>
+              <MaterialIcons name="notifications-none" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
+            {image ? (
+              <Image source={{ uri: image }} style={styles.image} />
+            ) : (
+              <ImagePickerIcon />
+            )}
           </TouchableOpacity>
-        ))}
-      </View>
-      <View style={styles.rowContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>마감일</Text>
+          <Text style={styles.label}>제목</Text>
           <TextInput
             style={styles.input}
-            placeholder="YYYY.MM.DD"
+            placeholder="제목"
             placeholderTextColor="#666"
-            value={date}
-            onChangeText={setDate}
+            value={title}
+            onChangeText={setTitle}
+            editable
           />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>포인트</Text>
+          <Text style={styles.label}>본문</Text>
           <TextInput
-            style={styles.input}
-            placeholder="포인트"
+            style={[styles.input, styles.textArea]}
+            placeholder="본문을 입력해 주세요."
             placeholderTextColor="#666"
-            value={price}
-            onChangeText={setPrice}
-            keyboardType="numeric"
+            value={content}
+            onChangeText={setContent}
+            multiline
+            editable
           />
-        </View>
-      </View>
+          <Text style={styles.label}>태그</Text>
+          <View style={styles.tagContainer}>
+            {['심부름', '개발', '디자인', '기타'].map(tag => (
+              <TouchableOpacity
+                key={tag}
+                style={[styles.tag, tags.includes(tag) && styles.selectedTag]}
+                onPress={() => handleTagPress(tag)}
+              >
+                <Text style={[styles.tagText, tags.includes(tag) && styles.selectedTagText]}>{tag}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <View style={styles.rowContainer}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>마감일</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="YYYY.MM.DD"
+                placeholderTextColor="#666"
+                value={date}
+                onChangeText={setDate}
+                editable
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>포인트</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="포인트"
+                placeholderTextColor="#666"
+                value={price}
+                onChangeText={setPrice}
+                keyboardType="numeric"
+                editable
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>업로드하기</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    padding: 16,
+    flex: 1,
     backgroundColor: '#000',
+    paddingTop: 15,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingVertical: 16,
+    paddingBottom: 100,
+    paddingHorizontal: 20,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    paddingVertical: 16,
-    backgroundColor: '#1c1c1c',
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    marginBottom: 16,
   },
   coinContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginLeft: 4,
+    marginRight: 'auto',
+  },
+  coinIcon: {
+    width: 24,
+    height: 24,
   },
   coinText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '500',
     color: 'white',
-    marginLeft: 8,
+    marginLeft: 3,
+    fontFamily: 'Pretendard',
+    lineHeight: 22,
+    textAlign: 'center',
   },
   imagePicker: {
     width: 80,
@@ -174,8 +231,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'center',
-    marginBottom: 16,
+    alignSelf: 'flex-start',
+    marginBottom: 30,
   },
   image: {
     width: '100%',
@@ -184,27 +241,58 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 48,
-    borderColor: '#FFD700',
-    borderWidth: 1,
-    borderRadius: 12,
+    borderColor: '#FCDC2A',
+    borderWidth: 2,
+    borderRadius: 8,
     paddingHorizontal: 16,
-    marginBottom: 16,
-    color: 'white',
-    backgroundColor: '#1c1c1c',
+    color: '#CCC',
+    backgroundColor: '#000',
+    fontFamily: 'Pretendard',
+    fontSize: 18,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    lineHeight: 22,
+    marginBottom: 30,
   },
   textArea: {
-    height: 100,
+    borderColor: '#FCDC2A',
+    borderWidth: 2,
+    borderRadius: 8,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    marginBottom: 30,
+    color: '#CCC',
+    backgroundColor: '#000',
+    fontFamily: 'Pretendard',
+    fontSize: 18,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    lineHeight: 22,
+    display: 'flex',
+    alignItems: 'flex-start',
+    flex: 1,
+    alignSelf: 'stretch',
+  },
+  label: {
+    color: '#FCFCFC',
+    fontFamily: 'Pretendard',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    lineHeight: 22,
+    marginBottom: 8,
   },
   tagContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 16,
+    marginBottom: 30,
   },
   tag: {
     backgroundColor: '#FFD700',
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 12,
+    marginHorizontal: 4,
   },
   selectedTag: {
     backgroundColor: '#666',
@@ -218,21 +306,29 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 30,
   },
   inputContainer: {
     flex: 1,
     marginHorizontal: 8,
   },
-  label: {
-    color: 'white',
-    marginBottom: 8,
-  },
   button: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: '#FFD700',
-    padding: 16,
-    borderRadius: 12,
+    height: 70,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
     alignItems: 'center',
-    marginTop: 16,
+    justifyContent: 'center',
+    borderTopColor: '#000',
+    borderLeftColor: '#000',
+    borderRightColor: '#000',
+    borderTopWidth: 2,
+    borderLeftWidth: 2,
+    borderRightWidth: 2,
   },
   buttonText: {
     color: '#333',
