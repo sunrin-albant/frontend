@@ -23,7 +23,11 @@ function HomeStackScreen() {
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen name="Details" component={DetailsScreen} />
-      <Stack.Screen name="AddCard" component={AddCardScreen} />
+      <Stack.Screen
+        name="AddCard"
+        component={AddCardScreen}
+        options={{ presentation: 'modal' }}
+      />
     </Stack.Navigator>
   );
 }

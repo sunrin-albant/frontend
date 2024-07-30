@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import CoinIcon from '../assets/Coin.png';
+import BackIcon from '../components/BackIcon';
+import FavoriteIcon from '../components/FavoriteIcon'; 
+import CalendarIcon from '../components/CalendarIcon'; 
 
 export default function DetailsScreen({ route, navigation }) {
   const { item } = route.params;
@@ -12,26 +16,26 @@ export default function DetailsScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.imageHeader}>
-          <Image source={{ uri: item.image }} style={styles.backgroundImage} />
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <MaterialIcons name="arrow-back" size={24} color="black" />
-            </TouchableOpacity>
-            <View style={styles.coinContainer}>
-              <MaterialIcons name="attach-money" size={24} color="gold" />
-              <Text style={styles.coinText}>14,000</Text>
-            </View>
-            <TouchableOpacity>
-              <MaterialIcons name="notifications-none" size={24} color="black" />
-            </TouchableOpacity>
+      <View style={styles.imageHeader}>
+        <Image source={{ uri: item.image }} style={styles.backgroundImage} />
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <BackIcon />
+          </TouchableOpacity>
+          <View style={styles.coinContainer}>
+            <Image source={require('../assets/Coin.png')} style={styles.coinIcon} />
+            <Text style={styles.coinText}>14,000</Text>
           </View>
-          <TouchableOpacity style={styles.favoriteIcon} onPress={toggleFavorite}>
-            <MaterialIcons name={isFavorite ? "favorite" : "favorite-border"} size={24} color={isFavorite ? "red" : "black"} />
+          <TouchableOpacity>
+            <MaterialIcons name="notifications-none" size={24} color="white" />
           </TouchableOpacity>
         </View>
+        <View style={styles.favoriteIcon}>
+          <FavoriteIcon onPress={toggleFavorite} />
+        </View>
+      </View>
 
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.userContainer}>
           <MaterialIcons name="person" size={40} color="#666" style={styles.userIcon} />
           <View>
@@ -40,10 +44,13 @@ export default function DetailsScreen({ route, navigation }) {
           </View>
           <View style={styles.infoContainer}>
             <Text style={styles.infoText}>🪙 {item.price.toLocaleString()}원</Text>
-            <Text style={styles.infoText}>📅 {item.date}까지</Text>
+            <View style={styles.dateContainer}>
+              <CalendarIcon style={styles.calendarIcon} />
+              <Text style={styles.infoText}>{item.date}까지</Text>
+            </View>
           </View>
         </View>
-
+        <View style={styles.separatorLine} /> {}
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{item.title}</Text>
           <View style={styles.tagContainer}>
@@ -73,24 +80,37 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    width: '100%',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    zIndex: 10,
     position: 'absolute',
-    top: 16,
-    left: 16,
-    right: 16,
-    zIndex: 1,
+    top: 40,
+    left: 0,
+    right: 0,
   },
   coinContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginLeft: 4,
+    marginRight: 'auto',
+  },
+  coinIcon: {
+    width: 24,
+    height: 24,
   },
   coinText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'black',
-    marginLeft: 8,
+    fontSize: 20,
+    fontWeight: '500',
+    color: 'white',
+    marginLeft: 3,
+    fontFamily: 'Pretendard',
+    lineHeight: 22,
+    textAlign: 'center',
   },
   scrollContainer: {
-    paddingBottom: 80, 
+    flexGrow: 1,
+    paddingBottom: 80,
   },
   imageHeader: {
     width: '100%',
@@ -106,17 +126,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     right: 10,
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 5,
   },
   userContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
     backgroundColor: '#1c1c1c',
-    borderBottomWidth: 1,
-    borderBottomColor: '#FFD700',
   },
   userIcon: {
     marginRight: 8,
@@ -137,6 +152,19 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 14,
     color: '#FFD700',
+  },
+  dateContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  calendarIcon: {
+    marginRight: 4,
+  },
+  separatorLine: {
+    height: 1,
+    backgroundColor: '#FFD700',
+    marginHorizontal: 16,
+    marginBottom: 16,
   },
   detailsContainer: {
     padding: 16,

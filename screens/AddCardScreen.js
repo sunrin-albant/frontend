@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -98,81 +98,83 @@ export default function AddCardScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <BackIcon />
+        </TouchableOpacity>
+        <View style={styles.coinContainer}>
+          <Image source={CoinIcon} style={styles.coinIcon} />
+          <Text style={styles.coinText}>14,000</Text>
+        </View>
+        <TouchableOpacity>
+          <MaterialIcons name="notifications-none" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+      <KeyboardAvoidingView style={styles.avoidingView} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <BackIcon />
+          <View style={styles.content}>
+            <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
+              {image ? (
+                <Image source={{ uri: image }} style={styles.image} />
+              ) : (
+                <ImagePickerIcon />
+              )}
             </TouchableOpacity>
-            <View style={styles.coinContainer}>
-              <Image source={CoinIcon} style={styles.coinIcon} />
-              <Text style={styles.coinText}>14,000</Text>
+            <Text style={styles.label}>제목</Text>
+            <TextInput
+              style={[styles.input, styles.titleInput]}
+              placeholder="제목"
+              placeholderTextColor="#666"
+              value={title}
+              onChangeText={setTitle}
+              editable
+            />
+            <Text style={styles.label}>본문</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              placeholder="본문을 입력해 주세요."
+              placeholderTextColor="#666"
+              value={content}
+              onChangeText={setContent}
+              multiline
+              editable
+            />
+            <Text style={styles.label}>태그</Text>
+            <View style={styles.tagContainer}>
+              {['심부름', '개발', '디자인', '기타'].map(tag => (
+                <TouchableOpacity
+                  key={tag}
+                  style={[styles.tag, tags.includes(tag) && styles.selectedTag]}
+                  onPress={() => handleTagPress(tag)}
+                >
+                  <Text style={[styles.tagText, tags.includes(tag) && styles.selectedTagText]}>{tag}</Text>
+                </TouchableOpacity>
+              ))}
             </View>
-            <TouchableOpacity>
-              <MaterialIcons name="notifications-none" size={24} color="white" />
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-            {image ? (
-              <Image source={{ uri: image }} style={styles.image} />
-            ) : (
-              <ImagePickerIcon />
-            )}
-          </TouchableOpacity>
-          <Text style={styles.label}>제목</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="제목"
-            placeholderTextColor="#666"
-            value={title}
-            onChangeText={setTitle}
-            editable
-          />
-          <Text style={styles.label}>본문</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            placeholder="본문을 입력해 주세요."
-            placeholderTextColor="#666"
-            value={content}
-            onChangeText={setContent}
-            multiline
-            editable
-          />
-          <Text style={styles.label}>태그</Text>
-          <View style={styles.tagContainer}>
-            {['심부름', '개발', '디자인', '기타'].map(tag => (
-              <TouchableOpacity
-                key={tag}
-                style={[styles.tag, tags.includes(tag) && styles.selectedTag]}
-                onPress={() => handleTagPress(tag)}
-              >
-                <Text style={[styles.tagText, tags.includes(tag) && styles.selectedTagText]}>{tag}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-          <View style={styles.rowContainer}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>마감일</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="YYYY.MM.DD"
-                placeholderTextColor="#666"
-                value={date}
-                onChangeText={setDate}
-                editable
-              />
-            </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>포인트</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="포인트"
-                placeholderTextColor="#666"
-                value={price}
-                onChangeText={setPrice}
-                keyboardType="numeric"
-                editable
-              />
+            <View style={styles.rowContainer}>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.label}>마감일</Text>
+                <TextInput
+                  style={[styles.input, styles.inputReducedWidth]}
+                  placeholder="YYYY.MM.DD"
+                  placeholderTextColor="#666"
+                  value={date}
+                  onChangeText={setDate}
+                  editable
+                />
+              </View>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.label}>포인트</Text>
+                <TextInput
+                  style={[styles.input, styles.inputReducedWidth]}
+                  placeholder="포인트"
+                  placeholderTextColor="#666"
+                  value={price}
+                  onChangeText={setPrice}
+                  keyboardType="numeric"
+                  editable
+                />
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -188,13 +190,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    paddingTop: 15,
+    paddingTop: 40,
+  },
+  avoidingView: {
+    flex: 1,
   },
   scrollContainer: {
     flexGrow: 1,
     paddingVertical: 16,
-    paddingBottom: 100,
     paddingHorizontal: 20,
+    paddingBottom: 100,
   },
   header: {
     flexDirection: 'row',
@@ -202,8 +207,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     paddingVertical: 10,
-    paddingHorizontal: 8,
-    marginBottom: 16,
+    paddingHorizontal: 20,
+    backgroundColor: '#000',
+    zIndex: 10,
   },
   coinContainer: {
     flexDirection: 'row',
@@ -232,7 +238,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    marginBottom: 30,
+    marginBottom: 10,
   },
   image: {
     width: '100%',
@@ -248,11 +254,23 @@ const styles = StyleSheet.create({
     color: '#CCC',
     backgroundColor: '#000',
     fontFamily: 'Pretendard',
-    fontSize: 18,
+    fontSize: 16, 
     fontStyle: 'normal',
     fontWeight: '500',
-    lineHeight: 22,
+    lineHeight: 20, 
     marginBottom: 30,
+  },
+  titleInput: {
+    color: '#CCC',
+    fontFamily: 'Pretendard',
+    fontSize: 16, 
+    fontStyle: 'normal',
+    fontWeight: '500',
+    lineHeight: 20, 
+  },
+  inputReducedWidth: {
+    width: '90%',
+    paddingHorizontal: 10,
   },
   textArea: {
     borderColor: '#FCDC2A',
@@ -264,14 +282,15 @@ const styles = StyleSheet.create({
     color: '#CCC',
     backgroundColor: '#000',
     fontFamily: 'Pretendard',
-    fontSize: 18,
+    fontSize: 16, 
     fontStyle: 'normal',
     fontWeight: '500',
-    lineHeight: 22,
+    lineHeight: 20, 
     display: 'flex',
     alignItems: 'flex-start',
     flex: 1,
     alignSelf: 'stretch',
+    paddingBottom: 200,
   },
   label: {
     color: '#FCFCFC',
@@ -284,33 +303,43 @@ const styles = StyleSheet.create({
   },
   tagContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
     marginBottom: 30,
   },
   tag: {
     backgroundColor: '#FFD700',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    marginHorizontal: 4,
+    borderRadius: 4,
+    marginRight: 8,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 64,
+    height: 32,
+    paddingHorizontal: 8,
   },
   selectedTag: {
     backgroundColor: '#666',
   },
   tagText: {
-    color: '#333',
+    color: 'var(--secondary, #171717)',
+    textAlign: 'center',
+    fontFamily: 'Pretendard',
+    fontSize: 16,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 22,
   },
   selectedTagText: {
-    color: '#FFD700',
+    color: '#999999',
   },
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 30,
   },
-  inputContainer: {
+  inputWrapper: {
     flex: 1,
-    marginHorizontal: 8,
+    marginHorizontal: 5,
   },
   button: {
     position: 'absolute',
@@ -332,7 +361,10 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#333',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 32,
+    fontWeight: '600',
+    textAlign: 'center',
+    fontFamily: 'Pretendard',
+    lineHeight: 22,
   },
 });

@@ -7,7 +7,7 @@ import AddIcon from '../components/AddIcon';
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.9;
 
-const coinImage = require('../assets/Coin.png'); // Adjust the path as necessary
+const coinImage = require('../assets/Coin.png');
 
 const HomeScreen = ({ navigation }) => {
   const [data, setData] = useState([
@@ -177,15 +177,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   coinText: {
-    fontSize: 22, 
-    fontWeight: '400', 
+    fontSize: 22,
+    fontWeight: '400',
     color: 'white',
-    marginLeft: 3, 
-    fontFamily: 'Pretendard', 
+    marginLeft: 3,
+    fontFamily: 'Pretendard',
   },
   coinImage: {
-    width: 30, 
-    height: 30, 
+    width: 30,
+    height: 30,
     marginRight: 3,
   },
   coinImageSmall: {
@@ -215,10 +215,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   tab: {
-    paddingVertical: 8, 
-    paddingHorizontal: 8, 
+    paddingVertical: 8,
+    paddingHorizontal: 8,
     backgroundColor: '#333',
-    borderRadius: 4, 
+    borderRadius: 4,
     marginRight: 8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -296,8 +296,6 @@ const styles = StyleSheet.create({
   },
   tag: {
     backgroundColor: '#FFD700',
-    paddingVertical: 2, 
-    paddingHorizontal: 8,
     paddingVertical: 2,
     paddingHorizontal: 8,
     justifyContent: 'center',
