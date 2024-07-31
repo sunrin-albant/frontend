@@ -22,12 +22,8 @@ function HomeStackScreen() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="Search" component={SearchScreen} />
-      <Stack.Screen name="Details" component={DetailsScreen} />
-      <Stack.Screen
-        name="AddCard"
-        component={AddCardScreen}
-        options={{ presentation: 'modal' }}
-      />
+      <Stack.Screen name="Details" component={DetailsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="AddCard" component={AddCardScreen} options={{ presentation: 'modal' }} />
     </Stack.Navigator>
   );
 }

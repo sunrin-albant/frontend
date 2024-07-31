@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import CoinIcon from '../assets/Coin.png';
 import BackIcon from '../components/BackIcon';
-import FavoriteIcon from '../components/FavoriteIcon'; 
-import CalendarIcon from '../components/CalendarIcon'; 
+import FavoriteIcon from '../components/FavoriteIcon';
+import CalendarIcon from '../components/CalendarIcon';
 
 export default function DetailsScreen({ route, navigation }) {
   const { item } = route.params;
@@ -13,6 +13,32 @@ export default function DetailsScreen({ route, navigation }) {
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const parentNavigator = navigation.getParent();
+      if (parentNavigator) {
+        parentNavigator.setOptions({ tabBarStyle: { display: 'none' } });
+      }
+
+      return () => {
+        if (parentNavigator) {
+          parentNavigator.setOptions({
+            tabBarStyle: {
+              backgroundColor: 'black',
+              borderTopColor: '#FCDC2A',
+              borderTopWidth: 2,
+              borderTopLeftRadius: 15,
+              borderTopRightRadius: 15,
+              height: 70,
+              paddingBottom: 10,
+              display: 'flex',
+            },
+          });
+        }
+      };
+    }, [navigation])
+  );
 
   return (
     <View style={styles.container}>
@@ -31,26 +57,31 @@ export default function DetailsScreen({ route, navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.favoriteIcon}>
-          <FavoriteIcon onPress={toggleFavorite} />
+          <FavoriteIcon onPress={toggleFavorite} color="black" />
         </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.userContainer}>
-          <MaterialIcons name="person" size={40} color="#666" style={styles.userIcon} />
+          <View style={styles.userIconContainer}>
+            <MaterialIcons name="person" size={40} color="#1c1c1c" style={styles.userIcon} />
+          </View>
           <View>
             <Text style={styles.username}>{item.username}</Text>
             <Text style={styles.location}>소프트웨어과 119기</Text>
           </View>
           <View style={styles.infoContainer}>
-            <Text style={styles.infoText}>🪙 {item.price.toLocaleString()}원</Text>
+            <View style={styles.coinInfoContainer}>
+              <Image source={require('../assets/Coin.png')} style={styles.smallCoinIcon} />
+              <Text style={styles.infoText}>{item.price.toLocaleString()}원</Text>
+            </View>
             <View style={styles.dateContainer}>
-              <CalendarIcon style={styles.calendarIcon} />
+              <CalendarIcon style={styles.smallCalendarIcon} />
               <Text style={styles.infoText}>{item.date}까지</Text>
             </View>
           </View>
         </View>
-        <View style={styles.separatorLine} /> {}
+        <View style={styles.separatorLine} />
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{item.title}</Text>
           <View style={styles.tagContainer}>
@@ -62,11 +93,9 @@ export default function DetailsScreen({ route, navigation }) {
         </View>
       </ScrollView>
 
-      <View style={styles.fixedButtonContainer}>
-        <TouchableOpacity style={styles.chatButton}>
-          <Text style={styles.chatButtonText}>채팅하기</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.chatButton} onPress={() => Alert.alert('채팅 시작')}>
+        <Text style={styles.chatButtonText}>채팅하기</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -99,6 +128,11 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
+  smallCoinIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 4,
+  },
   coinText: {
     fontSize: 20,
     fontWeight: '500',
@@ -109,8 +143,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   scrollContainer: {
-    flexGrow: 1,
-    paddingBottom: 80,
+    paddingBottom: 150, 
   },
   imageHeader: {
     width: '100%',
@@ -125,54 +158,86 @@ const styles = StyleSheet.create({
   favoriteIcon: {
     position: 'absolute',
     bottom: 10,
-    right: 10,
+    right: 20,
   },
   userContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
     backgroundColor: '#1c1c1c',
+    paddingHorizontal: 20,
+  },
+  userIconContainer: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
   },
   userIcon: {
-    marginRight: 8,
+    borderRadius: 20,
   },
   username: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FFD700',
+    fontWeight: '600',
+    color: '#FCFCFC',
+    fontFamily: 'Pretendard',
+    lineHeight: 20,
+    fontStyle: 'normal',
   },
   location: {
-    fontSize: 14,
-    color: '#B3B3B3',
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#CCC',
+    fontFamily: 'Pretendard',
+    lineHeight: 16,
+    fontStyle: 'normal',
+    marginTop: 4,
   },
   infoContainer: {
     marginLeft: 'auto',
     alignItems: 'flex-end',
+    flexDirection: 'column',
+  },
+  coinInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+    alignSelf: 'flex-start',
   },
   infoText: {
     fontSize: 14,
-    color: '#FFD700',
+    color: 'white',
   },
   dateContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    alignSelf: 'flex-start',
   },
-  calendarIcon: {
+  smallCalendarIcon: {
     marginRight: 4,
+    width: 20,
+    height: 20,
   },
   separatorLine: {
     height: 1,
     backgroundColor: '#FFD700',
-    marginHorizontal: 16,
+    marginHorizontal: 0,
     marginBottom: 16,
   },
   detailsContainer: {
     padding: 16,
+    paddingHorizontal: 20,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFD700',
+    fontSize: 17,
+    fontWeight: '500',
+    color: '#FFF',
+    fontFamily: 'Pretendard',
+    lineHeight: 22,
+    fontStyle: 'normal',
     marginBottom: 8,
   },
   tagContainer: {
@@ -192,27 +257,31 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     marginBottom: 16,
   },
-  fixedButtonContainer: {
+  chatButton: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     backgroundColor: '#FFD700',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+    height: 70,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  chatButton: {
-    backgroundColor: '#FFD700',
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    width: '100%',
+    borderTopColor: '#000',
+    borderLeftColor: '#000',
+    borderRightColor: '#000',
+    borderTopWidth: 2,
+    borderLeftWidth: 2,
+    borderRightWidth: 2,
+    zIndex: 20,
   },
   chatButtonText: {
-    fontSize: 16,
-    color: '#000',
-    fontWeight: 'bold',
+    color: '#333',
+    fontSize: 32,
+    fontWeight: '600',
+    textAlign: 'center',
+    fontFamily: 'Pretendard',
+    lineHeight: 22,
   },
 });
