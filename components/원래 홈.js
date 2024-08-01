@@ -7,41 +7,13 @@ import AddIcon from '../components/AddIcon';
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.9;
 
-const antImage = require('../assets/logo.png'); 
-const coinImage = require('../assets/Coin.png'); 
+const coinImage = require('../assets/Coin.png');
 
 const HomeScreen = ({ navigation }) => {
   const [data, setData] = useState([
-    {
-      id: 1,
-      username: 'user1',
-      title: 'title',
-      tags: ['심부름', '노동'],
-      date: '2024.07.24',
-      price: 3000,
-      image: 'https://via.placeholder.com/150', 
-      isFavorite: false,
-    },
-    {
-      id: 2,
-      username: 'user2',
-      title: 'title2',
-      tags: ['심부름', '디자인'],
-      date: '2024.07.24',
-      price: 3000,
-      image: 'https://via.placeholder.com/150',
-      isFavorite: false,
-    },
-    {
-      id: 3,
-      username: 'user3',
-      title: 'title3',
-      tags: ['심부름', '기타'],
-      date: '2024.07.24',
-      price: 3000,
-      image: 'https://via.placeholder.com/150', 
-      isFavorite: false,
-    },
+    { id: 1, username: 'user1', title: 'title1', tags: ['개발', '기타'], date: '2024.07.24', price: 3000, image: '', isFavorite: false },
+    { id: 2, username: 'user2', title: 'title2', tags: ['심부름', '디자인'], date: '2024.07.24', price: 3000, image: '', isFavorite: false },
+    { id: 3, username: 'user3', title: 'title3', tags: ['심부름', '기타'], date: '2024.07.24', price: 3000, image: '', isFavorite: false },
   ]);
   const [selectedTags, setSelectedTags] = useState([]);
 
@@ -54,7 +26,7 @@ const HomeScreen = ({ navigation }) => {
       updatedData.unshift(movedItem);
     } else {
       const [movedItem] = updatedData.splice(index, 1);
-      const firstUnfavoritedIndex = updatedData.findIndex((item) => !item.isFavorite);
+      const firstUnfavoritedIndex = updatedData.findIndex(item => !item.isFavorite);
       if (firstUnfavoritedIndex === -1) {
         updatedData.push(movedItem);
       } else {
@@ -74,28 +46,24 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleTagPress = (tag) => {
-    setSelectedTags((prevTags) =>
-      prevTags.includes(tag) ? prevTags.filter((t) => t !== tag) : prevTags.length < 2 ? [...prevTags, tag] : prevTags
+    setSelectedTags(prevTags =>
+      prevTags.includes(tag) ? prevTags.filter(t => t !== tag) : prevTags.length < 2 ? [...prevTags, tag] : prevTags
     );
   };
 
-  const filteredData =
-    selectedTags.length > 0
-      ? selectedTags.includes('전체')
-        ? data 
-        : data.filter((item) => selectedTags.every((tag) => item.tags.includes(tag)))
-      : data;
+  const filteredData = selectedTags.length > 0
+    ? data.filter(item => selectedTags.every(tag => item.tags.includes(tag)))
+    : data;
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.coinContainer}>
-          {}
-          <Image source={antImage} style={styles.coinImage} />
-          <Text style={styles.coinText}>선린천국</Text>
+          <Image source={coinImage} style={styles.coinImage} />
+          <Text style={styles.coinText}>14,000</Text>
         </View>
         <View style={styles.iconContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('Search', { data })}>
+          <TouchableOpacity onPress={() => navigation.navigate('Search')}>
             <MaterialIcons name="search" size={24} color="white" style={styles.icon} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
@@ -104,16 +72,12 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
 
-      {}
-      <Text style={styles.titleText}>현재 인기 많은 알바!</Text>
-
       <View style={styles.tabContainer}>
         <FlatList
           horizontal
           contentContainerStyle={styles.tabContentContainer}
           showsHorizontalScrollIndicator={false}
           data={[
-            { key: '전체' }, 
             { key: '심부름' },
             { key: '개발' },
             { key: '디자인' },
@@ -121,10 +85,16 @@ const HomeScreen = ({ navigation }) => {
           ]}
           renderItem={({ item }) => (
             <TouchableOpacity
-              style={[styles.tab, selectedTags.includes(item.key) && styles.selectedTab]}
+              style={[
+                styles.tab,
+                selectedTags.includes(item.key) && styles.selectedTab,
+              ]}
               onPress={() => handleTagPress(item.key)}
             >
-              <Text style={[styles.tabText, selectedTags.includes(item.key) && styles.selectedTabText]}>{item.key}</Text>
+              <Text style={[
+                styles.tabText,
+                selectedTags.includes(item.key) && styles.selectedTabText,
+              ]}>{item.key}</Text>
             </TouchableOpacity>
           )}
           style={styles.tabList}
@@ -134,28 +104,37 @@ const HomeScreen = ({ navigation }) => {
       <FlatList
         data={filteredData}
         renderItem={({ item, index }) => (
-          <TouchableOpacity style={styles.card} onPress={() => handleCardPress(item)}>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => handleCardPress(item)}
+          >
             <View style={styles.cardContent}>
+              {item.image ? (
+                <Image source={{ uri: item.image }} style={styles.cardImage} />
+              ) : (
+                <View style={styles.imagePlaceholder}>
+                  <MaterialIcons name="photo" size={40} color="#666" />
+                </View>
+              )}
               <View style={styles.textContainer}>
                 <Text style={styles.username}>{item.username}</Text>
                 <Text style={styles.title}>{item.title}</Text>
                 <View style={styles.tagContainer}>
                   {item.tags.map((tag, i) => (
-                    <View key={i} style={styles.tag}>
-                      <Text style={styles.tagText}>{tag}</Text>
-                    </View>
+                    <Text key={i} style={styles.tag}>{tag}</Text>
                   ))}
                 </View>
               </View>
-              <View style={styles.profileImageContainer}>
-                <Image source={{ uri: item.image }} style={styles.profileImage} />
-              </View>
+              <TouchableOpacity onPress={() => handleFavoritePress(index)} style={styles.favoriteIconContainer}>
+                <MaterialIcons name={item.isFavorite ? "favorite" : "favorite-border"} size={24} color={item.isFavorite ? "red" : "white"} />
+              </TouchableOpacity>
             </View>
             <View style={styles.footer}>
               <View style={styles.dateContainer}>
                 <CalendarIcon style={styles.calendarIcon} />
                 <Text style={styles.date}> {item.date}까지</Text>
               </View>
+              <View style={styles.flexSpacer} />
               <View style={styles.priceContainer}>
                 <Image source={coinImage} style={styles.coinImageSmall} />
                 <Text style={styles.price}>{item.price.toLocaleString()}</Text>
@@ -198,13 +177,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   coinText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFF',
-    textAlign: 'center',
-    lineHeight: 22,
-    fontFamily: 'Gmarket Sans',
+    fontSize: 22,
+    fontWeight: '400',
+    color: 'white',
     marginLeft: 3,
+    fontFamily: 'Pretendard',
   },
   coinImage: {
     width: 30,
@@ -223,17 +200,6 @@ const styles = StyleSheet.create({
   icon: {
     marginLeft: 12,
   },
-  titleText: {
-    color: '#FCFCFC',
-    fontFamily: 'Pretendard',
-    fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: '600',
-    lineHeight: 'normal',
-    letterSpacing: -0.32,
-    marginLeft: 20,
-    marginBottom: 20,
-  },
   tabContainer: {
     backgroundColor: '#000000',
     paddingVertical: 10,
@@ -249,18 +215,16 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   tab: {
-    display: 'flex',
-    paddingVertical: 6,
-    paddingHorizontal: 18,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    backgroundColor: '#333',
+    borderRadius: 4,
+    marginRight: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.08)', 
-    borderRadius: 8, 
-    marginRight: 8,
   },
   selectedTab: {
-    backgroundColor: '#FCDC2A', 
-    borderRadius: 8, 
+    backgroundColor: '#FCDC2A',
   },
   tabText: {
     color: '#fff',
@@ -284,29 +248,37 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     width: CARD_WIDTH,
     alignSelf: 'center',
-    borderRadius: 10,
-    borderColor: 'rgba(255, 255, 255, 0.09)',
-    backgroundColor: 'rgba(255, 255, 255, 0.07)',
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  cardImage: {
+    width: 72,
+    height: 72,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  imagePlaceholder: {
+    width: 72,
+    height: 72,
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textContainer: {
     flex: 1,
-    justifyContent: 'center',
-    marginRight: 12,
-    height: 94.933,
   },
   username: {
-    color: '#CCC',
+    color: '#FCFCFC',
     fontFamily: 'Pretendard',
-    fontSize: 14,
-    fontStyle: 'normal',
-    fontWeight: '500',
-    lineHeight: 'normal',
-    letterSpacing: -0.28,
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 20,
+    letterSpacing: -0.64,
     marginBottom: 4,
   },
   title: {
@@ -321,26 +293,21 @@ const styles = StyleSheet.create({
   tagContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
   },
   tag: {
-    display: 'flex',
-    paddingVertical: 3,
-    paddingHorizontal: 12,
+    backgroundColor: '#FFD700',
+    paddingVertical: 2,
+    paddingHorizontal: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
-    backgroundColor: 'rgba(252, 220, 42, 0.20)',
+    borderRadius: 4,
     marginRight: 4,
   },
   tagText: {
-    color: '#FCDC2A',
-    textAlign: 'center',
+    color: '#171717',
     fontFamily: 'Pretendard',
     fontSize: 12,
-    fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 'normal',
   },
   favoriteIconContainer: {
     width: 24,
@@ -351,7 +318,6 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     marginTop: 8,
   },
   dateContainer: {
@@ -375,17 +341,6 @@ const styles = StyleSheet.create({
   },
   flexSpacer: {
     flex: 1,
-  },
-  profileImageContainer: {
-    width: 64,
-    height: 94.933,
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  profileImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
   },
   fab: {
     position: 'absolute',
