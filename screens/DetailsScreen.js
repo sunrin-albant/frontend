@@ -100,6 +100,10 @@ export default function DetailsScreen({ route, navigation }) {
   );
 }
 
+const baseTextStyle = {
+  fontFamily: 'Pretendard', // Apply Pretendard font to all text
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -134,11 +138,11 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   coinText: {
+    ...baseTextStyle,
     fontSize: 20,
     fontWeight: '500',
     color: 'white',
     marginLeft: 3,
-    fontFamily: 'Pretendard',
     lineHeight: 22,
     textAlign: 'center',
   },
@@ -180,18 +184,18 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   username: {
+    ...baseTextStyle,
     fontSize: 16,
     fontWeight: '600',
     color: '#FCFCFC',
-    fontFamily: 'Pretendard',
     lineHeight: 20,
     fontStyle: 'normal',
   },
   location: {
+    ...baseTextStyle,
     fontSize: 12,
     fontWeight: '600',
     color: '#CCC',
-    fontFamily: 'Pretendard',
     lineHeight: 16,
     fontStyle: 'normal',
     marginTop: 4,
@@ -208,6 +212,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   infoText: {
+    ...baseTextStyle,
     fontSize: 14,
     color: 'white',
   },
@@ -232,10 +237,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
+    ...baseTextStyle,
     fontSize: 17,
     fontWeight: '500',
     color: '#FFF',
-    fontFamily: 'Pretendard',
     lineHeight: 22,
     fontStyle: 'normal',
     marginBottom: 8,
@@ -245,14 +250,16 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   tag: {
+    ...baseTextStyle,
     backgroundColor: '#FFD700',
     color: '#333',
     paddingVertical: 4,
     paddingHorizontal: 8,
-    borderRadius: 12,
+    borderRadius: 4,
     marginRight: 4,
   },
   description: {
+    ...baseTextStyle,
     fontSize: 16,
     color: '#FFFFFF',
     marginBottom: 16,
@@ -277,11 +284,11 @@ const styles = StyleSheet.create({
     zIndex: 20,
   },
   chatButtonText: {
+    ...baseTextStyle,
     color: '#333',
     fontSize: 32,
     fontWeight: '600',
     textAlign: 'center',
-    fontFamily: 'Pretendard',
     lineHeight: 22,
   },
 });

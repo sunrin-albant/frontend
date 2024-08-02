@@ -186,6 +186,10 @@ export default function AddCardScreen({ route, navigation }) {
   );
 }
 
+const baseTextStyle = {
+  fontFamily: 'Pretendard', // Apply Pretendard font to all text
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -222,11 +226,11 @@ const styles = StyleSheet.create({
     height: 24,
   },
   coinText: {
+    ...baseTextStyle,
     fontSize: 20,
     fontWeight: '500',
     color: 'white',
     marginLeft: 3,
-    fontFamily: 'Pretendard',
     lineHeight: 22,
     textAlign: 'center',
   },
@@ -253,18 +257,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     color: '#CCC',
     backgroundColor: '#000',
-    fontFamily: 'Pretendard',
+    ...baseTextStyle,
     fontSize: 16, 
-    fontStyle: 'normal',
     fontWeight: '500',
     lineHeight: 20, 
     marginBottom: 30,
   },
   titleInput: {
     color: '#CCC',
-    fontFamily: 'Pretendard',
+    ...baseTextStyle,
     fontSize: 16, 
-    fontStyle: 'normal',
     fontWeight: '500',
     lineHeight: 20, 
   },
@@ -281,9 +283,8 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     color: '#CCC',
     backgroundColor: '#000',
-    fontFamily: 'Pretendard',
+    ...baseTextStyle,
     fontSize: 16, 
-    fontStyle: 'normal',
     fontWeight: '500',
     lineHeight: 20, 
     display: 'flex',
@@ -294,9 +295,8 @@ const styles = StyleSheet.create({
   },
   label: {
     color: '#FCFCFC',
-    fontFamily: 'Pretendard',
+    ...baseTextStyle,
     fontSize: 14,
-    fontStyle: 'normal',
     fontWeight: '500',
     lineHeight: 22,
     marginBottom: 8,
@@ -321,11 +321,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#666',
   },
   tagText: {
+    ...baseTextStyle,
     color: 'var(--secondary, #171717)',
     textAlign: 'center',
-    fontFamily: 'Pretendard',
     fontSize: 16,
-    fontStyle: 'normal',
     fontWeight: '600',
     lineHeight: 22,
   },
@@ -360,11 +359,11 @@ const styles = StyleSheet.create({
     borderRightWidth: 2,
   },
   buttonText: {
+    ...baseTextStyle,
     color: '#333',
     fontSize: 32,
     fontWeight: '600',
     textAlign: 'center',
-    fontFamily: 'Pretendard',
     lineHeight: 22,
   },
 });

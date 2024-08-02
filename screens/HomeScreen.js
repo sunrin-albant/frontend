@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Dimensions, Image } from 'react-native';
+import * as Font from 'expo-font';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CalendarIcon from '../components/CalendarIcon';
 import AddIcon from '../components/AddIcon';
@@ -11,6 +12,8 @@ const antImage = require('../assets/logo.png');
 const coinImage = require('../assets/Coin.png'); 
 
 const HomeScreen = ({ navigation }) => {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
   const [data, setData] = useState([
     {
       id: 1,
@@ -43,6 +46,7 @@ const HomeScreen = ({ navigation }) => {
       isFavorite: false,
     },
   ]);
+  
   const [selectedTags, setSelectedTags] = useState([]);
 
   const handleFavoritePress = (index) => {
@@ -86,11 +90,26 @@ const HomeScreen = ({ navigation }) => {
         : data.filter((item) => selectedTags.every((tag) => item.tags.includes(tag)))
       : data;
 
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        'Pretendard-Regular': require('../assets/fonts/Pretendard-Regular.otf'), // Pretendard Regular
+        'Pretendard-Bold': require('../assets/fonts/Pretendard-Bold.otf'), // Pretendard Bold
+      });
+      setFontsLoaded(true);
+    };
+
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    return null; // 폰트가 로드될 때까지 아무것도 표시하지 않음
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.coinContainer}>
-          {}
           <Image source={antImage} style={styles.coinImage} />
           <Text style={styles.coinText}>선린천국</Text>
         </View>
@@ -104,7 +123,6 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
 
-      {}
       <Text style={styles.titleText}>현재 인기 많은 알바!</Text>
 
       <View style={styles.tabContainer}>
@@ -199,11 +217,11 @@ const styles = StyleSheet.create({
   },
   coinText: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '700', // Adjusted to match the weight
     color: '#FFF',
     textAlign: 'center',
-    lineHeight: 22,
-    fontFamily: 'Gmarket Sans',
+    lineHeight: 22, // 137.5% equivalent
+    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
     marginLeft: 3,
   },
   coinImage: {
@@ -225,7 +243,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: '#FCFCFC',
-    fontFamily: 'Pretendard',
+    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
     fontSize: 16,
     fontStyle: 'normal',
     fontWeight: '600',
@@ -264,9 +282,11 @@ const styles = StyleSheet.create({
   },
   tabText: {
     color: '#fff',
+    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
   },
   selectedTabText: {
     color: '#000000',
+    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
   },
   contentContainer: {
     paddingBottom: 100,
@@ -301,7 +321,7 @@ const styles = StyleSheet.create({
   },
   username: {
     color: '#CCC',
-    fontFamily: 'Pretendard',
+    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '500',
@@ -311,7 +331,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#FCFCFC',
-    fontFamily: 'Pretendard',
+    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 20,
@@ -336,7 +356,7 @@ const styles = StyleSheet.create({
   tagText: {
     color: '#FCDC2A',
     textAlign: 'center',
-    fontFamily: 'Pretendard',
+    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '600',
@@ -364,6 +384,7 @@ const styles = StyleSheet.create({
   date: {
     color: '#FCFCFC',
     fontSize: 16,
+    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
   },
   priceContainer: {
     flexDirection: 'row',
@@ -372,6 +393,7 @@ const styles = StyleSheet.create({
   price: {
     color: '#FFD700',
     fontSize: 14,
+    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
   },
   flexSpacer: {
     flex: 1,
