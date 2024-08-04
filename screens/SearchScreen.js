@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,10 +7,12 @@ import {
   FlatList,
   Dimensions,
   Image,
-  TextInput
+  TextInput,
 } from 'react-native';
 import BackIcon from '../components/BackIcon';
-import CalendarIcon from '../components/CalendarIcon'; // Import the custom CalendarIcon
+import CalendarIcon from '../components/CalendarIcon';
+import FilterIcon from '../components/FilterIcon';
+import FilterModal from '../components/FilterModal';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.9;
@@ -19,9 +21,11 @@ const coinImage = require('../assets/Coin.png');
 
 const SearchScreen = ({ route, navigation }) => {
   const { data: initialData } = route.params;
+
   const [data, setData] = useState(initialData);
   const [selectedTags, setSelectedTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterVisible, setFilterVisible] = useState(false);
 
   const handleCardPress = (item) => {
     navigation.navigate('Details', { item });
@@ -41,7 +45,8 @@ const SearchScreen = ({ route, navigation }) => {
     selectedTags.length === 0
       ? data.filter(
           (item) =>
-            item.title.includes(searchQuery) || item.username.includes(searchQuery)
+            item.title.includes(searchQuery) ||
+            item.username.includes(searchQuery)
         )
       : data
           .filter((item) =>
@@ -53,10 +58,13 @@ const SearchScreen = ({ route, navigation }) => {
               item.username.includes(searchQuery)
           );
 
+  const toggleFilterModal = useCallback(() => {
+    setFilterVisible((prev) => !prev);
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {/* Back button to navigate to HomeScreen */}
         <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
           <BackIcon />
         </TouchableOpacity>
@@ -71,32 +79,12 @@ const SearchScreen = ({ route, navigation }) => {
         </View>
       </View>
 
-      <FlatList
-        horizontal
-        contentContainerStyle={styles.tabContentContainer}
-        showsHorizontalScrollIndicator={false}
-        data={['전체', '심부름', '개발', '디자인', '기타']}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[
-              styles.tab,
-              selectedTags.includes(item) && styles.selectedTab
-            ]}
-            onPress={() => handleTagPress(item)}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                selectedTags.includes(item) && styles.selectedTabText
-              ]}
-            >
-              {item}
-            </Text>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item}
-        style={styles.tabList}
-      />
+      <View style={styles.customTextContainer}>
+        <Text style={styles.customText}>키워드 · 최신순 · 임금</Text>
+        <TouchableOpacity onPress={toggleFilterModal}>
+          <FilterIcon />
+        </TouchableOpacity>
+      </View>
 
       <FlatList
         data={filteredData}
@@ -123,7 +111,6 @@ const SearchScreen = ({ route, navigation }) => {
             </View>
             <View style={styles.footer}>
               <View style={styles.dateContainer}>
-                {/* Use the custom CalendarIcon instead of MaterialIcons */}
                 <CalendarIcon style={styles.calendarIcon} />
                 <Text style={styles.date}> {item.date}까지</Text>
               </View>
@@ -139,8 +126,17 @@ const SearchScreen = ({ route, navigation }) => {
         contentContainerStyle={styles.contentContainer}
         style={styles.list}
       />
+
+      <FilterModal
+        isVisible={filterVisible}
+        onClose={toggleFilterModal}
+      />
     </View>
   );
+};
+
+SearchScreen.navigationOptions = {
+  headerShown: false,
 };
 
 const styles = StyleSheet.create({
@@ -149,7 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    paddingTop: 40
+    paddingTop: 40,
   },
   header: {
     flexDirection: 'row',
@@ -158,7 +154,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: '#000000',
-    marginBottom: 20
+    marginBottom: 20,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -167,97 +163,91 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     flex: 1,
-    marginHorizontal: 10
+    marginHorizontal: 10,
   },
   searchInput: {
     color: 'white',
     fontSize: 16,
     flex: 1,
-    paddingVertical: 8
-  },
-  tabContentContainer: {
-    paddingLeft: 20,
-    paddingRight: (width - CARD_WIDTH) / 2,
-    marginBottom: 20
-  },
-  tabList: {
-    alignSelf: 'center'
-  },
-  tab: {
     paddingVertical: 8,
-    paddingHorizontal: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 8,
+  },
+  customTextContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    paddingHorizontal: 20,
+  },
+  customText: {
+    color: '#FFF',
+    fontFamily: 'Pretendard',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 22,
     marginRight: 8,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  selectedTab: {
-    backgroundColor: '#FCDC2A',
-    borderRadius: 8
-  },
-  tabText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 14
-  },
-  selectedTabText: {
-    color: '#000000',
-    textAlign: 'center',
-    fontSize: 14
   },
   list: {
     alignSelf: 'center',
-    width: '100%'
+    width: '100%',
   },
   contentContainer: {
-    paddingBottom: 100,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   card: {
-    backgroundColor: '#333333',
-    borderRadius: 10,
-    padding: 20,
-    marginBottom: 32,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.09)',
+    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    padding: 16,
+    marginBottom: 24,
     width: CARD_WIDTH,
     alignSelf: 'center',
-    borderColor: 'rgba(255, 255, 255, 0.09)',
-    backgroundColor: 'rgba(255, 255, 255, 0.07)'
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+  },
+  textAndImageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 12,
   },
   textContainer: {
     flex: 1,
     justifyContent: 'center',
-    marginRight: 12,
-    height: 94.933
   },
   username: {
     color: '#CCC',
-    fontFamily: 'Pretendard',
+    fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '500',
-    lineHeight: 'normal',
+    lineHeight: 20,
     letterSpacing: -0.28,
-    marginBottom: 4
+    marginBottom: 4,
   },
   title: {
     color: '#FCFCFC',
-    fontFamily: 'Pretendard',
+    fontFamily: 'Pretendard-Regular',
     fontSize: 16,
     fontWeight: '400',
-    lineHeight: 20,
+    lineHeight: 22,
     letterSpacing: -0.64,
-    marginBottom: 4
+    marginBottom: 4,
   },
   tagContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8
+    marginBottom: 8,
   },
   tag: {
     display: 'flex',
@@ -267,60 +257,59 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     backgroundColor: 'rgba(252, 220, 42, 0.20)',
-    marginRight: 4
+    marginRight: 4,
   },
   tagText: {
     color: '#FCDC2A',
     textAlign: 'center',
-    fontFamily: 'Pretendard',
+    fontFamily: 'Pretendard-Regular',
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 'normal'
+    lineHeight: 18,
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8
+    marginTop: 8,
   },
   dateContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   calendarIcon: {
-    marginRight: 4 // Adjusted for better spacing
+    marginRight: 4,
   },
   date: {
     color: '#FCFCFC',
-    fontSize: 16
+    fontSize: 16,
   },
   priceContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   coinImageSmall: {
     width: 20,
     height: 20,
-    marginRight: 4
+    marginRight: 4,
   },
   price: {
-    color: '#FFD700',
-    fontSize: 14
+    color: '#ffffff',
+    fontSize: 14,
   },
   flexSpacer: {
-    flex: 1
+    flex: 1,
   },
   profileImageContainer: {
     width: 64,
     height: 94.933,
     borderRadius: 8,
-    overflow: 'hidden'
   },
   profileImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover'
-  }
+    resizeMode: 'cover',
+  },
 });
 
 export default SearchScreen;

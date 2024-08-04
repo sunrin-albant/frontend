@@ -19,11 +19,27 @@ const Tab = createBottomTabNavigator();
 
 function HomeStackScreen() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      <Stack.Screen name="Search" component={SearchScreen} />
-      <Stack.Screen name="Details" component={DetailsScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="AddCard" component={AddCardScreen} options={{ presentation: 'modal' }} />
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="HomeScreen" 
+        component={HomeScreen} 
+        options={{ headerShown: false }} 
+      />
+      <Stack.Screen 
+        name="Search" 
+        component={SearchScreen} 
+        options={{ headerShown: false }}  // 헤더 숨기기
+      />
+      <Stack.Screen 
+        name="Details" 
+        component={DetailsScreen} 
+        options={{ headerShown: false }} 
+      />
+      <Stack.Screen 
+        name="AddCard" 
+        component={AddCardScreen} 
+        options={{ presentation: 'modal', headerShown: false }} 
+      />
     </Stack.Navigator>
   );
 }

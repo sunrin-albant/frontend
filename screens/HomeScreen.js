@@ -6,14 +6,13 @@ import CalendarIcon from '../components/CalendarIcon';
 import AddIcon from '../components/AddIcon';
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = width * 0.9;
+const CARD_WIDTH = width * 0.9; // Card width set to 90% of screen width
 
 const antImage = require('../assets/logo.png'); 
 const coinImage = require('../assets/Coin.png'); 
 
 const HomeScreen = ({ navigation }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-
   const [data, setData] = useState([
     {
       id: 1,
@@ -22,7 +21,7 @@ const HomeScreen = ({ navigation }) => {
       tags: ['심부름', '노동'],
       date: '2024.07.24',
       price: 3000,
-      image: 'https://via.placeholder.com/150', 
+      image: 'https://via.placeholder.com/50',
       isFavorite: false,
     },
     {
@@ -32,7 +31,7 @@ const HomeScreen = ({ navigation }) => {
       tags: ['심부름', '디자인'],
       date: '2024.07.24',
       price: 3000,
-      image: 'https://via.placeholder.com/150',
+      image: 'https://via.placeholder.com/50',
       isFavorite: false,
     },
     {
@@ -42,12 +41,10 @@ const HomeScreen = ({ navigation }) => {
       tags: ['심부름', '기타'],
       date: '2024.07.24',
       price: 3000,
-      image: 'https://via.placeholder.com/150', 
+      image: 'https://via.placeholder.com/50',
       isFavorite: false,
     },
   ]);
-  
-  const [selectedTags, setSelectedTags] = useState([]);
 
   const handleFavoritePress = (index) => {
     const updatedData = [...data];
@@ -77,24 +74,12 @@ const HomeScreen = ({ navigation }) => {
     setData([...data, { ...newCard, id: data.length + 1, isFavorite: false }]);
   };
 
-  const handleTagPress = (tag) => {
-    setSelectedTags((prevTags) =>
-      prevTags.includes(tag) ? prevTags.filter((t) => t !== tag) : prevTags.length < 2 ? [...prevTags, tag] : prevTags
-    );
-  };
-
-  const filteredData =
-    selectedTags.length > 0
-      ? selectedTags.includes('전체')
-        ? data 
-        : data.filter((item) => selectedTags.every((tag) => item.tags.includes(tag)))
-      : data;
-
   useEffect(() => {
     const loadFonts = async () => {
       await Font.loadAsync({
         'Pretendard-Regular': require('../assets/fonts/Pretendard-Regular.otf'), // Pretendard Regular
         'Pretendard-Bold': require('../assets/fonts/Pretendard-Bold.otf'), // Pretendard Bold
+        'SangjuGgotgamche': require('../assets/fonts/SANGJU Gotgam.ttf'), // 상주곶감체
       });
       setFontsLoaded(true);
     };
@@ -111,7 +96,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.header}>
         <View style={styles.coinContainer}>
           <Image source={antImage} style={styles.coinImage} />
-          <Text style={styles.coinText}>선린천국</Text>
+          <Text style={styles.coinText}>albant</Text>
         </View>
         <View style={styles.iconContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('Search', { data })}>
@@ -125,49 +110,34 @@ const HomeScreen = ({ navigation }) => {
 
       <Text style={styles.titleText}>현재 인기 많은 알바!</Text>
 
-      <View style={styles.tabContainer}>
-        <FlatList
-          horizontal
-          contentContainerStyle={styles.tabContentContainer}
-          showsHorizontalScrollIndicator={false}
-          data={[
-            { key: '전체' }, 
-            { key: '심부름' },
-            { key: '개발' },
-            { key: '디자인' },
-            { key: '기타' },
-          ]}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={[styles.tab, selectedTags.includes(item.key) && styles.selectedTab]}
-              onPress={() => handleTagPress(item.key)}
-            >
-              <Text style={[styles.tabText, selectedTags.includes(item.key) && styles.selectedTabText]}>{item.key}</Text>
-            </TouchableOpacity>
-          )}
-          style={styles.tabList}
-        />
-      </View>
-
       <FlatList
-        data={filteredData}
+        data={data}
         renderItem={({ item, index }) => (
           <TouchableOpacity style={styles.card} onPress={() => handleCardPress(item)}>
             <View style={styles.cardContent}>
-              <View style={styles.textContainer}>
-                <Text style={styles.username}>{item.username}</Text>
-                <Text style={styles.title}>{item.title}</Text>
-                <View style={styles.tagContainer}>
-                  {item.tags.map((tag, i) => (
-                    <View key={i} style={styles.tag}>
-                      <Text style={styles.tagText}>{tag}</Text>
-                    </View>
-                  ))}
+              <View style={styles.textAndImageContainer}>
+                <Image source={{ uri: item.image }} style={styles.profileImage} />
+                <View style={styles.textContainer}>
+                  <Text style={styles.username}>{item.username}</Text>
+                  <Text style={styles.title}>{item.title}</Text>
+                  <View style={styles.tagContainer}>
+                    {item.tags.map((tag, i) => (
+                      <View key={i} style={styles.tag}>
+                        <Text style={styles.tagText}>{tag}</Text>
+                      </View>
+                    ))}
+                  </View>
                 </View>
               </View>
-              <View style={styles.profileImageContainer}>
-                <Image source={{ uri: item.image }} style={styles.profileImage} />
-              </View>
+              <TouchableOpacity 
+                style={styles.favoriteIconContainer} 
+                onPress={() => handleFavoritePress(index)}>
+                <MaterialIcons 
+                  name={item.isFavorite ? 'favorite' : 'favorite-border'} 
+                  size={24} 
+                  color={item.isFavorite ? '#F00' : '#FFF'} 
+                />
+              </TouchableOpacity>
             </View>
             <View style={styles.footer}>
               <View style={styles.dateContainer}>
@@ -221,12 +191,12 @@ const styles = StyleSheet.create({
     color: '#FFF',
     textAlign: 'center',
     lineHeight: 22, // 137.5% equivalent
-    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
+    fontFamily: 'SangjuGgotgamche', // 상주곶감체 적용
     marginLeft: 3,
   },
   coinImage: {
-    width: 30,
-    height: 30,
+    width: 40, // Increased logo size
+    height: 40, // Increased logo size
     marginRight: 3,
   },
   coinImageSmall: {
@@ -252,42 +222,6 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginBottom: 20,
   },
-  tabContainer: {
-    backgroundColor: '#000000',
-    paddingVertical: 10,
-    paddingLeft: 20,
-    marginBottom: 20,
-  },
-  tabContentContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
-  tabList: {
-    alignSelf: 'flex-start',
-  },
-  tab: {
-    display: 'flex',
-    paddingVertical: 6,
-    paddingHorizontal: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.08)', 
-    borderRadius: 8, 
-    marginRight: 8,
-  },
-  selectedTab: {
-    backgroundColor: '#FCDC2A', 
-    borderRadius: 8, 
-  },
-  tabText: {
-    color: '#fff',
-    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
-  },
-  selectedTabText: {
-    color: '#000000',
-    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
-  },
   contentContainer: {
     paddingBottom: 100,
     alignItems: 'flex-start',
@@ -298,26 +232,34 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   card: {
-    backgroundColor: '#333333',
-    borderRadius: 8,
-    padding: 20,
-    marginBottom: 32,
-    width: CARD_WIDTH,
-    alignSelf: 'center',
-    borderRadius: 10,
+    borderRadius: 8, // Updated border-radius for rounded corners
+    borderWidth: 1, // Added border width
     borderColor: 'rgba(255, 255, 255, 0.09)',
     backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    padding: 16, // Adjusted padding for visual balance
+    marginBottom: 24, // Updated margin-bottom
+    width: CARD_WIDTH,
+    alignSelf: 'center',
+    shadowColor: '#000', // Added shadow for depth
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4, // Elevation for Android
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  textAndImageContainer: {
+    flexDirection: 'row', // 이미지와 텍스트를 가로로 정렬
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 12,
+  },
   textContainer: {
     flex: 1,
     justifyContent: 'center',
-    marginRight: 12,
-    height: 94.933,
   },
   username: {
     color: '#CCC',
@@ -325,7 +267,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '500',
-    lineHeight: 'normal',
+    lineHeight: 20, // 텍스트의 줄 간격을 명확하게 설정
     letterSpacing: -0.28,
     marginBottom: 4,
   },
@@ -334,7 +276,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
     fontSize: 16,
     fontWeight: '400',
-    lineHeight: 20,
+    lineHeight: 22, // 텍스트의 줄 간격을 명확하게 설정
     letterSpacing: -0.64,
     marginBottom: 4,
   },
@@ -360,11 +302,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 'normal',
+    lineHeight: 18, // 텍스트의 줄 간격을 명확하게 설정
   },
   favoriteIconContainer: {
-    width: 24,
-    height: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -383,7 +323,7 @@ const styles = StyleSheet.create({
   },
   date: {
     color: '#FCFCFC',
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
   },
   priceContainer: {
@@ -391,7 +331,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   price: {
-    color: '#FFD700',
+    color: '#ffffff',
     fontSize: 14,
     fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
   },
@@ -399,15 +339,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profileImageContainer: {
-    width: 64,
-    height: 94.933,
     borderRadius: 8,
     overflow: 'hidden',
   },
   profileImage: {
-    width: '100%',
-    height: '100%',
+    width: 70, // 이미지의 너비 설정
+    height: 70    , // 이미지의 높이를 텍스트 높이에 맞춰 설정
+    borderRadius: 8, // 둥근 모서리를 줍니다.
     resizeMode: 'cover',
+    marginRight: 12, // 텍스트와의 간격을 줍니다.
   },
   fab: {
     position: 'absolute',
