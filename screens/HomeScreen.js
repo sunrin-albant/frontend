@@ -6,7 +6,7 @@ import CalendarIcon from '../components/CalendarIcon';
 import AddIcon from '../components/AddIcon';
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = width * 0.9; // Card width set to 90% of screen width
+const CARD_WIDTH = width * 0.9;
 
 const antImage = require('../assets/logo.png'); 
 const coinImage = require('../assets/Coin.png'); 
@@ -23,6 +23,7 @@ const HomeScreen = ({ navigation }) => {
       price: 3000,
       image: 'https://via.placeholder.com/50',
       isFavorite: false,
+      favoriteCount: 0,
     },
     {
       id: 2,
@@ -33,6 +34,7 @@ const HomeScreen = ({ navigation }) => {
       price: 3000,
       image: 'https://via.placeholder.com/50',
       isFavorite: false,
+      favoriteCount: 0,
     },
     {
       id: 3,
@@ -43,26 +45,14 @@ const HomeScreen = ({ navigation }) => {
       price: 3000,
       image: 'https://via.placeholder.com/50',
       isFavorite: false,
+      favoriteCount: 0,
     },
   ]);
 
   const handleFavoritePress = (index) => {
     const updatedData = [...data];
     updatedData[index].isFavorite = !updatedData[index].isFavorite;
-
-    if (updatedData[index].isFavorite) {
-      const [movedItem] = updatedData.splice(index, 1);
-      updatedData.unshift(movedItem);
-    } else {
-      const [movedItem] = updatedData.splice(index, 1);
-      const firstUnfavoritedIndex = updatedData.findIndex((item) => !item.isFavorite);
-      if (firstUnfavoritedIndex === -1) {
-        updatedData.push(movedItem);
-      } else {
-        updatedData.splice(firstUnfavoritedIndex, 0, movedItem);
-      }
-    }
-
+    updatedData[index].favoriteCount += updatedData[index].isFavorite ? 1 : -1;
     setData(updatedData);
   };
 
@@ -71,15 +61,15 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleAddCard = (newCard) => {
-    setData([...data, { ...newCard, id: data.length + 1, isFavorite: false }]);
+    setData([...data, { ...newCard, id: data.length + 1, isFavorite: false, favoriteCount: 0 }]);
   };
 
   useEffect(() => {
     const loadFonts = async () => {
       await Font.loadAsync({
-        'Pretendard-Regular': require('../assets/fonts/Pretendard-Regular.otf'), // Pretendard Regular
-        'Pretendard-Bold': require('../assets/fonts/Pretendard-Bold.otf'), // Pretendard Bold
-        'SangjuGgotgamche': require('../assets/fonts/SANGJU Gotgam.ttf'), // 상주곶감체
+        'Pretendard-Regular': require('../assets/fonts/Pretendard-Regular.otf'),
+        'Pretendard-Bold': require('../assets/fonts/Pretendard-Bold.otf'),
+        'SangjuGgotgamche': require('../assets/fonts/SANGJU Gotgam.ttf'),
       });
       setFontsLoaded(true);
     };
@@ -88,7 +78,7 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   if (!fontsLoaded) {
-    return null; // 폰트가 로드될 때까지 아무것도 표시하지 않음
+    return null;
   }
 
   return (
@@ -129,15 +119,19 @@ const HomeScreen = ({ navigation }) => {
                   </View>
                 </View>
               </View>
-              <TouchableOpacity 
-                style={styles.favoriteIconContainer} 
-                onPress={() => handleFavoritePress(index)}>
-                <MaterialIcons 
-                  name={item.isFavorite ? 'favorite' : 'favorite-border'} 
-                  size={24} 
-                  color={item.isFavorite ? '#F00' : '#FFF'} 
-                />
-              </TouchableOpacity>
+              <View style={styles.favoriteContainer}>
+                <TouchableOpacity
+                  style={styles.favoriteIconContainer}
+                  onPress={() => handleFavoritePress(index)}
+                >
+                  <MaterialIcons
+                    name={item.isFavorite ? 'favorite' : 'favorite-border'}
+                    size={24}
+                    color={item.isFavorite ? '#F00' : '#FFF'}
+                  />
+                </TouchableOpacity>
+                <Text style={styles.favoriteCount}>{item.favoriteCount}</Text>
+              </View>
             </View>
             <View style={styles.footer}>
               <View style={styles.dateContainer}>
@@ -187,16 +181,16 @@ const styles = StyleSheet.create({
   },
   coinText: {
     fontSize: 16,
-    fontWeight: '700', // Adjusted to match the weight
+    fontWeight: '700',
     color: '#FFF',
     textAlign: 'center',
-    lineHeight: 22, // 137.5% equivalent
-    fontFamily: 'SangjuGgotgamche', // 상주곶감체 적용
+    lineHeight: 22,
+    fontFamily: 'SangjuGgotgamche',
     marginLeft: 3,
   },
   coinImage: {
-    width: 40, // Increased logo size
-    height: 40, // Increased logo size
+    width: 40,
+    height: 40,
     marginRight: 3,
   },
   coinImageSmall: {
@@ -213,7 +207,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: '#FCFCFC',
-    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
+    fontFamily: 'Pretendard-Regular',
     fontSize: 16,
     fontStyle: 'normal',
     fontWeight: '600',
@@ -232,19 +226,19 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   card: {
-    borderRadius: 8, // Updated border-radius for rounded corners
-    borderWidth: 1, // Added border width
+    borderRadius: 8,
+    borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.09)',
     backgroundColor: 'rgba(255, 255, 255, 0.07)',
-    padding: 16, // Adjusted padding for visual balance
-    marginBottom: 24, // Updated margin-bottom
+    padding: 16,
+    marginBottom: 24,
     width: CARD_WIDTH,
     alignSelf: 'center',
-    shadowColor: '#000', // Added shadow for depth
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 4, // Elevation for Android
+    elevation: 4,
   },
   cardContent: {
     flexDirection: 'row',
@@ -252,7 +246,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   textAndImageContainer: {
-    flexDirection: 'row', // 이미지와 텍스트를 가로로 정렬
+    flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
     marginRight: 12,
@@ -263,20 +257,20 @@ const styles = StyleSheet.create({
   },
   username: {
     color: '#CCC',
-    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
+    fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '500',
-    lineHeight: 20, // 텍스트의 줄 간격을 명확하게 설정
+    lineHeight: 20,
     letterSpacing: -0.28,
     marginBottom: 4,
   },
   title: {
     color: '#FCFCFC',
-    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
+    fontFamily: 'Pretendard-Regular',
     fontSize: 16,
     fontWeight: '400',
-    lineHeight: 22, // 텍스트의 줄 간격을 명확하게 설정
+    lineHeight: 22,
     letterSpacing: -0.64,
     marginBottom: 4,
   },
@@ -298,15 +292,25 @@ const styles = StyleSheet.create({
   tagText: {
     color: '#FCDC2A',
     textAlign: 'center',
-    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
+    fontFamily: 'Pretendard-Regular',
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 18, // 텍스트의 줄 간격을 명확하게 설정
+    lineHeight: 18,
+  },
+  favoriteContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   favoriteIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  favoriteCount: {
+    color: '#FFF',
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 12,
+    marginTop: 4,
   },
   footer: {
     flexDirection: 'row',
@@ -324,7 +328,7 @@ const styles = StyleSheet.create({
   date: {
     color: '#FCFCFC',
     fontSize: 14,
-    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
+    fontFamily: 'Pretendard-Regular',
   },
   priceContainer: {
     flexDirection: 'row',
@@ -333,7 +337,7 @@ const styles = StyleSheet.create({
   price: {
     color: '#ffffff',
     fontSize: 14,
-    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
+    fontFamily: 'Pretendard-Regular',
   },
   flexSpacer: {
     flex: 1,
@@ -343,11 +347,11 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   profileImage: {
-    width: 70, // 이미지의 너비 설정
-    height: 70    , // 이미지의 높이를 텍스트 높이에 맞춰 설정
-    borderRadius: 8, // 둥근 모서리를 줍니다.
+    width: 70,
+    height: 70,
+    borderRadius: 8,
     resizeMode: 'cover',
-    marginRight: 12, // 텍스트와의 간격을 줍니다.
+    marginRight: 12,
   },
   fab: {
     position: 'absolute',

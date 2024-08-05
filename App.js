@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 
 import HomeScreen from './screens/HomeScreen';
 import SearchScreen from './screens/SearchScreen';
@@ -28,7 +28,7 @@ function HomeStackScreen() {
       <Stack.Screen 
         name="Search" 
         component={SearchScreen} 
-        options={{ headerShown: false }}  // 헤더 숨기기
+        options={{ headerShown: false }}  
       />
       <Stack.Screen 
         name="Details" 
@@ -67,24 +67,44 @@ export default function App() {
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: ({ color, size, focused }) => {
+              let IconComponent;
               if (route.name === 'Home') {
-                return <HomeIcon fill={focused ? 'white' : color} focused={focused} />;
+                IconComponent = HomeIcon;
               } else if (route.name === 'Messages') {
-                return <ChatIcon fill={focused ? 'white' : color} focused={focused} />;
+                IconComponent = ChatIcon;
               } else if (route.name === 'Profile') {
-                return <ProfileIcon fill={focused ? 'white' : color} focused={focused} />;
+                IconComponent = ProfileIcon;
               }
+
+              return <IconComponent fill={focused ? 'white' : '#666'} focused={focused} />;
+            },
+            tabBarLabel: ({ focused }) => {
+              let labelText;
+              if (route.name === 'Home') {
+                labelText = '홈';
+              } else if (route.name === 'Messages') {
+                labelText = '채팅';
+              } else if (route.name === 'Profile') {
+                labelText = '마이페이지';
+              }
+
+              return (
+                <Text style={{ color: focused ? 'white' : '#666', fontWeight: focused ? 'bold' : 'normal', fontSize: 12 }}>
+                  {labelText}
+                </Text>
+              );
             },
             tabBarActiveTintColor: 'white',
-            tabBarInactiveTintColor: 'white',
+            tabBarInactiveTintColor: '#666',
             tabBarStyle: {
               backgroundColor: 'black',
               borderTopColor: '#FCDC2A',
               borderTopWidth: 2,
-              borderTopLeftRadius: 15,
-              borderTopRightRadius: 15,
               height: 70,
               paddingBottom: 10,
+              borderTopLeftRadius: 15,
+              borderTopRightRadius: 15,
+              overflow: 'hidden', 
             },
             headerShown: false,
           })}

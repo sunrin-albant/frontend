@@ -3,15 +3,16 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, Alert } fr
 import { useFocusEffect } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import BackIcon from '../components/BackIcon';
-import FavoriteIcon from '../components/FavoriteIcon';
 import CalendarIcon from '../components/CalendarIcon';
 
 export default function DetailsScreen({ route, navigation }) {
   const { item } = route.params;
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(item.isFavorite);
+  const [favoriteCount, setFavoriteCount] = useState(item.favoriteCount);
 
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
+    setFavoriteCount(isFavorite ? favoriteCount - 1 : favoriteCount + 1);
   };
 
   useFocusEffect(
@@ -57,7 +58,14 @@ export default function DetailsScreen({ route, navigation }) {
           </TouchableOpacity>
         </View>
         <View style={styles.favoriteIcon}>
-          <FavoriteIcon onPress={toggleFavorite} color="black" />
+          <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
+            <MaterialIcons
+              name={isFavorite ? 'favorite' : 'favorite-border'}
+              size={24}
+              color={isFavorite ? 'red' : 'black'} // Change heart color based on isFavorite state
+            />
+            <Text style={styles.favoriteCount}>{favoriteCount}</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -163,6 +171,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     right: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  favoriteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  favoriteCount: {
+    ...baseTextStyle,
+    fontSize: 16,
+    color: 'black',  // Changed text color to black
+    marginLeft: 4,
   },
   userContainer: {
     flexDirection: 'row',

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,7 @@ import {
   Image,
   TextInput,
 } from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; // Import MaterialIcons for heart icon
 import BackIcon from '../components/BackIcon';
 import CalendarIcon from '../components/CalendarIcon';
 import FilterIcon from '../components/FilterIcon';
@@ -62,6 +63,21 @@ const SearchScreen = ({ route, navigation }) => {
     setFilterVisible((prev) => !prev);
   }, []);
 
+  useEffect(() => {
+    // 모달이 열릴 때 네비게이션 바 숨기기
+    navigation.setOptions({
+      tabBarStyle: { display: filterVisible ? 'none' : 'flex' },
+    });
+  }, [filterVisible, navigation]);
+
+  // Handle favorite press function to toggle favorite state and count
+  const handleFavoritePress = (index) => {
+    const updatedData = [...data];
+    updatedData[index].isFavorite = !updatedData[index].isFavorite;
+    updatedData[index].favoriteCount += updatedData[index].isFavorite ? 1 : -1;
+    setData(updatedData);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -88,25 +104,42 @@ const SearchScreen = ({ route, navigation }) => {
 
       <FlatList
         data={filteredData}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <TouchableOpacity
             style={styles.card}
             onPress={() => handleCardPress(item)}
           >
             <View style={styles.cardContent}>
-              <View style={styles.textContainer}>
-                <Text style={styles.username}>{item.username}</Text>
-                <Text style={styles.title}>{item.title}</Text>
-                <View style={styles.tagContainer}>
-                  {item.tags.map((tag, i) => (
-                    <View key={i} style={styles.tag}>
-                      <Text style={styles.tagText}>{tag}</Text>
-                    </View>
-                  ))}
+              <View style={styles.textAndImageContainer}>
+                <Image
+                  source={{ uri: item.image }}
+                  style={styles.profileImage}
+                />
+                <View style={styles.textContainer}>
+                  <Text style={styles.username}>{item.username}</Text>
+                  <Text style={styles.title}>{item.title}</Text>
+                  <View style={styles.tagContainer}>
+                    {item.tags.map((tag, i) => (
+                      <View key={i} style={styles.tag}>
+                        <Text style={styles.tagText}>{tag}</Text>
+                      </View>
+                    ))}
+                  </View>
                 </View>
               </View>
-              <View style={styles.profileImageContainer}>
-                <Image source={{ uri: item.image }} style={styles.profileImage} />
+              {/* Add the favorite icon and count */}
+              <View style={styles.favoriteContainer}>
+                <TouchableOpacity
+                  style={styles.favoriteIconContainer}
+                  onPress={() => handleFavoritePress(index)}
+                >
+                  <MaterialIcons
+                    name={item.isFavorite ? 'favorite' : 'favorite-border'}
+                    size={24}
+                    color={item.isFavorite ? '#F00' : '#FFF'}
+                  />
+                </TouchableOpacity>
+                <Text style={styles.favoriteCount}>{item.favoriteCount}</Text>
               </View>
             </View>
             <View style={styles.footer}>
@@ -117,7 +150,9 @@ const SearchScreen = ({ route, navigation }) => {
               <View style={styles.flexSpacer} />
               <View style={styles.priceContainer}>
                 <Image source={coinImage} style={styles.coinImageSmall} />
-                <Text style={styles.price}>{item.price.toLocaleString()}</Text>
+                <Text style={styles.price}>
+                  {item.price.toLocaleString()}
+                </Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -127,16 +162,9 @@ const SearchScreen = ({ route, navigation }) => {
         style={styles.list}
       />
 
-      <FilterModal
-        isVisible={filterVisible}
-        onClose={toggleFilterModal}
-      />
+      <FilterModal isVisible={filterVisible} onClose={toggleFilterModal} />
     </View>
   );
-};
-
-SearchScreen.navigationOptions = {
-  headerShown: false,
 };
 
 const styles = StyleSheet.create({
@@ -196,19 +224,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   card: {
-    borderRadius: 8,
-    borderWidth: 1,
+    borderRadius: 8, // Updated border-radius for rounded corners
+    borderWidth: 1, // Added border width
     borderColor: 'rgba(255, 255, 255, 0.09)',
     backgroundColor: 'rgba(255, 255, 255, 0.07)',
-    padding: 16,
-    marginBottom: 24,
+    padding: 16, // Adjusted padding for visual balance
+    marginBottom: 24, // Updated margin-bottom
     width: CARD_WIDTH,
     alignSelf: 'center',
-    shadowColor: '#000',
+    shadowColor: '#000', // Added shadow for depth
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 4,
+    elevation: 4, // Elevation for Android
   },
   cardContent: {
     flexDirection: 'row',
@@ -216,7 +244,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   textAndImageContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row', // 이미지와 텍스트를 가로로 정렬
     alignItems: 'center',
     flex: 1,
     marginRight: 12,
@@ -227,20 +255,20 @@ const styles = StyleSheet.create({
   },
   username: {
     color: '#CCC',
-    fontFamily: 'Pretendard-Regular',
+    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '500',
-    lineHeight: 20,
+    lineHeight: 20, // 텍스트의 줄 간격을 명확하게 설정
     letterSpacing: -0.28,
     marginBottom: 4,
   },
   title: {
     color: '#FCFCFC',
-    fontFamily: 'Pretendard-Regular',
+    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
     fontSize: 16,
     fontWeight: '400',
-    lineHeight: 22,
+    lineHeight: 22, // 텍스트의 줄 간격을 명확하게 설정
     letterSpacing: -0.64,
     marginBottom: 4,
   },
@@ -262,11 +290,25 @@ const styles = StyleSheet.create({
   tagText: {
     color: '#FCDC2A',
     textAlign: 'center',
-    fontFamily: 'Pretendard-Regular',
+    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 18,
+    lineHeight: 18, // 텍스트의 줄 간격을 명확하게 설정
+  },
+  favoriteContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  favoriteIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  favoriteCount: {
+    color: '#FFF',
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 12,
+    marginTop: 4,
   },
   footer: {
     flexDirection: 'row',
@@ -306,9 +348,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   profileImage: {
-    width: '100%',
-    height: '100%',
+    width: 70, // 이미지의 너비 설정
+    height: 70, // 이미지의 높이를 텍스트 높이에 맞춰 설정
+    borderRadius: 8, // 둥근 모서리를 줍니다.
     resizeMode: 'cover',
+    marginRight: 12, // 텍스트와의 간격을 줍니다.
   },
 });
 
