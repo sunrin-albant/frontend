@@ -1,11 +1,20 @@
-import React from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Text, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, TextInput, TouchableOpacity, Text, SafeAreaView, Alert } from 'react-native';
 
 const UserNameScreen = ({ navigation }) => {
+  const [userName, setUserName] = useState('');
+
+  const handleNext = () => {
+    if (userName.trim() === '') {
+      Alert.alert('경고', '이름을 입력해 주세요.');
+    } else {
+      navigation.navigate('ProfileImage');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        {}
         <Text style={styles.title}>앱에서 사용할</Text>
         <Text style={styles.title}>이름을 정해주세요!</Text>
       </View>
@@ -16,10 +25,11 @@ const UserNameScreen = ({ navigation }) => {
           style={styles.input}
           placeholder="이름"
           placeholderTextColor="#999"
+          value={userName}
+          onChangeText={setUserName}
         />
       </View>
 
-      {}
       <View style={styles.pageIndicatorContainer}>
         <View style={[styles.circle, styles.activeCircle]} />
         <View style={styles.circle} />
@@ -30,7 +40,7 @@ const UserNameScreen = ({ navigation }) => {
 
       <TouchableOpacity
         style={styles.nextButton}
-        onPress={() => navigation.navigate('Main')} 
+        onPress={handleNext}
       >
         <Text style={styles.nextButtonText}>다음</Text>
       </TouchableOpacity>
@@ -47,7 +57,7 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   headerContainer: {
-    marginTop: 40, 
+    marginTop: 40,
     paddingHorizontal: 20,
     marginBottom: 0,
   },
@@ -59,7 +69,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   inputContainer: {
-    marginTop: 0, 
+    marginTop: 0,
     marginBottom: 40,
     paddingHorizontal: 20,
   },

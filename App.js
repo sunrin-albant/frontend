@@ -1,12 +1,11 @@
-// App.js
-
 import React from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { View, Text } from 'react-native';
+import { Text } from 'react-native'; 
 
 import UserNameScreen from './screens/UserNameScreen';
+import ProfileImageScreen from './screens/ProfileImageScreen';
 import HomeScreen from './screens/HomeScreen';
 import SearchScreen from './screens/SearchScreen';
 import MessagesScreen from './screens/MessagesScreen';
@@ -159,6 +158,7 @@ export default function App() {
         }}
       >
         <Stack.Screen name="UserName" component={UserNameScreen} />
+        <Stack.Screen name="ProfileImage" component={ProfileImageScreen} />
         <Stack.Screen name="Main" component={MainTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
