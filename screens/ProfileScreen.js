@@ -1,61 +1,36 @@
-// screens/ProfileScreen.js
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import CoinIcon from '../assets/Coin.png'; // Make sure this path is correct
+import CoinIcon from '../assets/Coin.png';
 
-/**
- * ProfileScreen component displays the user's profile information and activities.
- *
- * @param {Object} props - The component props.
- * @param {Object} props.navigation - The navigation object to handle navigation actions.
- * @returns {JSX.Element} A React component that renders the profile screen.
- */
 export default function ProfileScreen({ navigation }) {
-  const [isFavorite, setIsFavorite] = useState(false);
-
-  /**
-   * Toggles the favorite status.
-   */
-  const toggleFavorite = () => {
-    setIsFavorite((prevIsFavorite) => !prevIsFavorite);
-  };
-
-  /**
-   * Navigate to the Profile Edit screen.
-   */
+  
   const navigateToProfileEdit = () => {
-    navigation.navigate('ProfileEdit');  // Navigate to the ProfileEdit screen
+    navigation.navigate('ProfileEdit'); 
   };
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <Header />
 
-      {/* Profile Section */}
+      {}
       <View style={styles.profileSection}>
         <ProfileInfo />
         <TouchableOpacity
           style={styles.profileButton}
-          onPress={navigateToProfileEdit} // Navigate to ProfileEdit screen
+          onPress={navigateToProfileEdit} 
         >
           <Text style={styles.profileButtonText}>프로필 수정</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Activity Section */}
+      {}
       <ActivitySection />
     </View>
   );
 }
 
-/**
- * Header component for the Profile Screen.
- *
- * @returns {JSX.Element} A React component that renders the header.
- */
 const Header = () => (
   <View style={styles.header}>
     <Text style={styles.pageTitle}>마이페이지</Text>
@@ -65,11 +40,6 @@ const Header = () => (
   </View>
 );
 
-/**
- * ProfileInfo component for displaying user's basic info.
- *
- * @returns {JSX.Element} A React component that renders the user's profile info.
- */
 const ProfileInfo = () => (
   <View style={styles.profileInfo}>
     <View style={styles.profilePicture} />
@@ -84,11 +54,6 @@ const ProfileInfo = () => (
   </View>
 );
 
-/**
- * ActivitySection component for displaying user's activities.
- *
- * @returns {JSX.Element} A React component that renders the activity section.
- */
 const ActivitySection = () => (
   <View style={styles.activitySection}>
     <Text style={styles.activityTitle}>나의 활동</Text>
@@ -98,14 +63,6 @@ const ActivitySection = () => (
   </View>
 );
 
-/**
- * ActivityItem component for displaying an individual activity.
- *
- * @param {Object} props - The component props.
- * @param {string} props.icon - The icon name for the activity.
- * @param {string} props.text - The text description of the activity.
- * @returns {JSX.Element} A React component that renders an activity item.
- */
 const ActivityItem = ({ icon, text }) => (
   <View style={styles.activityItem}>
     <MaterialCommunityIcons name={icon} size={24} color="#fff" />

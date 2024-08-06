@@ -10,22 +10,21 @@ import { MaterialIcons } from 'react-native-vector-icons';
  * @returns {JSX.Element} A React component that renders the profile edit screen.
  */
 export default function ProfileEdit({ navigation }) {
-  // State variables for form inputs
+  
   const [name, setName] = useState('권지원');
   const [department, setDepartment] = useState('소프트웨어과');
   const [classYear, setClassYear] = useState('1기');
 
-  // Handle Save Button Press
   const handleSave = () => {
-    // Handle saving logic here
+    
     console.log('Profile Saved:', { name, department, classYear });
-    // Navigate back to ProfileScreen
+    
     navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <MaterialIcons name="arrow-back" size={24} color="white" />
@@ -33,7 +32,7 @@ export default function ProfileEdit({ navigation }) {
         <Text style={styles.headerTitle}>프로필 수정</Text>
       </View>
 
-      {/* Profile Image Section */}
+      {}
       <View style={styles.profileImageContainer}>
         <Image style={styles.profileImage} source={{ uri: 'https://via.placeholder.com/150' }} />
         <TouchableOpacity style={styles.cameraIconContainer}>
@@ -41,7 +40,7 @@ export default function ProfileEdit({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* Form Section */}
+      {}
       <View style={styles.form}>
         <Text style={styles.label}>이름</Text>
         <TextInput
@@ -71,7 +70,7 @@ export default function ProfileEdit({ navigation }) {
         />
       </View>
 
-      {/* Save Button */}
+      {}
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
         <Text style={styles.saveButtonText}>저장하기</Text>
       </TouchableOpacity>

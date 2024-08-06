@@ -9,7 +9,7 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; // Import MaterialIcons for heart icon
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import BackIcon from '../components/BackIcon';
 import CalendarIcon from '../components/CalendarIcon';
 import FilterIcon from '../components/FilterIcon';
@@ -27,76 +27,72 @@ const SearchScreen = ({ route, navigation }) => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterVisible, setFilterVisible] = useState(false);
+  const [filters, setFilters] = useState({
+    startDate: '',
+    endDate: '',
+    selectedTags: [],
+    minPoints: '',
+    maxPoints: '',
+  });
 
   const handleCardPress = (item) => {
     navigation.navigate('Details', { item });
   };
 
-  const handleTagPress = (tag) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter((t) => t !== tag));
-    } else {
-      if (selectedTags.length < 2) {
-        setSelectedTags([...selectedTags, tag]);
-      }
-    }
+  const handleFavoritePress = (index) => {
+    const updatedData = [...data]; 
+    updatedData[index].isFavorite = !updatedData[index].isFavorite; 
+    updatedData[index].favoriteCount += updatedData[index].isFavorite ? 1 : -1;
+    setData(updatedData); 
   };
 
-  const filteredData =
-    selectedTags.length === 0
-      ? data.filter(
-          (item) =>
-            item.title.includes(searchQuery) ||
-            item.username.includes(searchQuery)
-        )
-      : data
-          .filter((item) =>
-            selectedTags.every((tag) => item.tags.includes(tag))
-          )
-          .filter(
-            (item) =>
-              item.title.includes(searchQuery) ||
-              item.username.includes(searchQuery)
-          );
+  const applyFilters = (newFilters) => {
+    setFilters(newFilters);
+  };
 
-  const toggleFilterModal = useCallback(() => {
+  const filteredData = data.filter((item) => {
+    
+    const tagMatch =
+      filters.selectedTags.length === 0 ||
+      filters.selectedTags.every((tag) => item.tags.includes(tag));
+    
+    const searchMatch =
+      item.title.includes(searchQuery) || item.username.includes(searchQuery);
+
+    const { startDate, endDate } = filters;
+    const itemDate = new Date(item.date); 
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const dateMatch =
+      (!startDate || itemDate >= start) && (!endDate || itemDate <= end);
+
+    const { minPoints, maxPoints } = filters;
+    const pointsMatch =
+      (!minPoints || item.price >= parseInt(minPoints, 10)) &&
+      (!maxPoints || item.price <= parseInt(maxPoints, 10));
+
+    return tagMatch && searchMatch && dateMatch && pointsMatch;
+  });
+
+  const toggleFilterModal = () => {
     setFilterVisible((prev) => !prev);
-  }, []);
-
-  useEffect(() => {
-    // 모달이 열릴 때 네비게이션 바 숨기기
-    navigation.setOptions({
-      tabBarStyle: { display: filterVisible ? 'none' : 'flex' },
-    });
-  }, [filterVisible, navigation]);
-
-  // Handle favorite press function to toggle favorite state and count
-  const handleFavoritePress = (index) => {
-    const updatedData = [...data];
-    updatedData[index].isFavorite = !updatedData[index].isFavorite;
-    updatedData[index].favoriteCount += updatedData[index].isFavorite ? 1 : -1;
-    setData(updatedData);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <BackIcon />
         </TouchableOpacity>
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
-            placeholder="검색어를 입력해주세요."
-            placeholderTextColor="#666"
+            placeholder="검색어를 입력해주세요"
+            placeholderTextColor="#888"
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
         </View>
-      </View>
-
-      <View style={styles.customTextContainer}>
-        <Text style={styles.customText}>키워드 · 최신순 · 임금</Text>
         <TouchableOpacity onPress={toggleFilterModal}>
           <FilterIcon />
         </TouchableOpacity>
@@ -111,10 +107,7 @@ const SearchScreen = ({ route, navigation }) => {
           >
             <View style={styles.cardContent}>
               <View style={styles.textAndImageContainer}>
-                <Image
-                  source={{ uri: item.image }}
-                  style={styles.profileImage}
-                />
+                <Image source={{ uri: item.image }} style={styles.profileImage} />
                 <View style={styles.textContainer}>
                   <Text style={styles.username}>{item.username}</Text>
                   <Text style={styles.title}>{item.title}</Text>
@@ -127,7 +120,6 @@ const SearchScreen = ({ route, navigation }) => {
                   </View>
                 </View>
               </View>
-              {/* Add the favorite icon and count */}
               <View style={styles.favoriteContainer}>
                 <TouchableOpacity
                   style={styles.favoriteIconContainer}
@@ -150,9 +142,7 @@ const SearchScreen = ({ route, navigation }) => {
               <View style={styles.flexSpacer} />
               <View style={styles.priceContainer}>
                 <Image source={coinImage} style={styles.coinImageSmall} />
-                <Text style={styles.price}>
-                  {item.price.toLocaleString()}
-                </Text>
+                <Text style={styles.price}>{item.price.toLocaleString()}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -162,7 +152,11 @@ const SearchScreen = ({ route, navigation }) => {
         style={styles.list}
       />
 
-      <FilterModal isVisible={filterVisible} onClose={toggleFilterModal} />
+      <FilterModal
+        isVisible={filterVisible}
+        onClose={toggleFilterModal}
+        onFilterChange={applyFilters}
+      />
     </View>
   );
 };
@@ -224,19 +218,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   card: {
-    borderRadius: 8, // Updated border-radius for rounded corners
-    borderWidth: 1, // Added border width
+    borderRadius: 8,
+    borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.09)',
     backgroundColor: 'rgba(255, 255, 255, 0.07)',
-    padding: 16, // Adjusted padding for visual balance
-    marginBottom: 24, // Updated margin-bottom
+    padding: 16,
+    marginBottom: 24,
     width: CARD_WIDTH,
     alignSelf: 'center',
-    shadowColor: '#000', // Added shadow for depth
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 4, // Elevation for Android
+    elevation: 4,
   },
   cardContent: {
     flexDirection: 'row',
@@ -244,7 +238,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   textAndImageContainer: {
-    flexDirection: 'row', // 이미지와 텍스트를 가로로 정렬
+    flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
     marginRight: 12,
@@ -255,20 +249,20 @@ const styles = StyleSheet.create({
   },
   username: {
     color: '#CCC',
-    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
+    fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '500',
-    lineHeight: 20, // 텍스트의 줄 간격을 명확하게 설정
+    lineHeight: 20,
     letterSpacing: -0.28,
     marginBottom: 4,
   },
   title: {
     color: '#FCFCFC',
-    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
+    fontFamily: 'Pretendard-Regular',
     fontSize: 16,
     fontWeight: '400',
-    lineHeight: 22, // 텍스트의 줄 간격을 명확하게 설정
+    lineHeight: 22,
     letterSpacing: -0.64,
     marginBottom: 4,
   },
@@ -290,11 +284,11 @@ const styles = StyleSheet.create({
   tagText: {
     color: '#FCDC2A',
     textAlign: 'center',
-    fontFamily: 'Pretendard-Regular', // Pretendard Regular 적용
+    fontFamily: 'Pretendard-Regular',
     fontSize: 12,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 18, // 텍스트의 줄 간격을 명확하게 설정
+    lineHeight: 18,
   },
   favoriteContainer: {
     justifyContent: 'center',
@@ -348,11 +342,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   profileImage: {
-    width: 70, // 이미지의 너비 설정
-    height: 70, // 이미지의 높이를 텍스트 높이에 맞춰 설정
-    borderRadius: 8, // 둥근 모서리를 줍니다.
+    width: 70,
+    height: 70,
+    borderRadius: 8,
     resizeMode: 'cover',
-    marginRight: 12, // 텍스트와의 간격을 줍니다.
+    marginRight: 12,
   },
 });
 

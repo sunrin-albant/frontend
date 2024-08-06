@@ -62,7 +62,7 @@ export default function DetailsScreen({ route, navigation }) {
             <MaterialIcons
               name={isFavorite ? 'favorite' : 'favorite-border'}
               size={24}
-              color={isFavorite ? 'red' : 'black'} // Change heart color based on isFavorite state
+              color={isFavorite ? 'red' : 'black'} 
             />
             <Text style={styles.favoriteCount}>{favoriteCount}</Text>
           </TouchableOpacity>
@@ -109,7 +109,7 @@ export default function DetailsScreen({ route, navigation }) {
 }
 
 const baseTextStyle = {
-  fontFamily: 'Pretendard', // Apply Pretendard font to all text
+  fontFamily: 'Pretendard', 
 };
 
 const styles = StyleSheet.create({
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   favoriteCount: {
     ...baseTextStyle,
     fontSize: 16,
-    color: 'black',  // Changed text color to black
+    color: 'black',  
     marginLeft: 4,
   },
   userContainer: {

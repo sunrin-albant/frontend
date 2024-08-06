@@ -187,7 +187,7 @@ export default function AddCardScreen({ route, navigation }) {
 }
 
 const baseTextStyle = {
-  fontFamily: 'Pretendard', // Apply Pretendard font to all text
+  fontFamily: 'Pretendard', 
 };
 
 const styles = StyleSheet.create({
