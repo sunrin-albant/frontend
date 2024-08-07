@@ -2,8 +2,9 @@ import React from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { Text } from 'react-native'; 
+import { Text } from 'react-native';
 
+import LoginScreen from './screens/LoginScreen'; 
 import UserNameScreen from './screens/UserNameScreen';
 import ProfileImageScreen from './screens/ProfileImageScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -12,6 +13,7 @@ import MessagesScreen from './screens/MessagesScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import DetailsScreen from './screens/DetailsScreen';
 import AddCardScreen from './screens/AddCardScreen';
+
 import HomeIcon from './components/HomeIcon';
 import ChatIcon from './components/ChatIcon';
 import ProfileIcon from './components/ProfileIcon';
@@ -152,11 +154,13 @@ export default function App() {
   return (
     <NavigationContainer theme={MyTheme}>
       <Stack.Navigator
+        initialRouteName="Login"  
         screenOptions={{
           headerShown: false,
           ...TransitionPresets.SlideFromRightIOS, 
         }}
       >
+        <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="UserName" component={UserNameScreen} />
         <Stack.Screen name="ProfileImage" component={ProfileImageScreen} />
         <Stack.Screen name="Main" component={MainTabNavigator} />
