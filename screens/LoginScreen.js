@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: 'white',
-    marginBottom: 5,
+    marginBottom: 10,
   },
   input: {
     backgroundColor: 'transparent',
@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     },
   signUpText: {
     color: 'white',
+    fontSize:12,
   },
   loginButton: {
     backgroundColor: '#FFD700',

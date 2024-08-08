@@ -3,12 +3,15 @@ import { StyleSheet, View, TextInput, TouchableOpacity, Text, SafeAreaView, Aler
 
 const UserNameScreen = ({ navigation }) => {
   const [userName, setUserName] = useState('');
+  const [isInputEmpty, setIsInputEmpty] = useState(false); 
 
   const handleNext = () => {
     if (userName.trim() === '') {
+      setIsInputEmpty(true);
       Alert.alert('경고', '이름을 입력해 주세요.');
     } else {
-      navigation.navigate('ProfileImage');
+      setIsInputEmpty(false);
+      navigation.navigate('ProfileImage', { userName }); 
     }
   };
 
@@ -22,12 +25,18 @@ const UserNameScreen = ({ navigation }) => {
       <View style={styles.inputContainer}>
         <Text style={styles.label}>이름</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, isInputEmpty && styles.inputError]} 
           placeholder="이름"
           placeholderTextColor="#999"
           value={userName}
-          onChangeText={setUserName}
+          onChangeText={text => {
+            setUserName(text);
+            if (text.trim() !== '') {
+              setIsInputEmpty(false); 
+            }
+          }}
         />
+        {isInputEmpty && <Text style={styles.errorText}>이름을 입력해주세요</Text>}
       </View>
 
       <View style={styles.pageIndicatorContainer}>
@@ -57,7 +66,7 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   headerContainer: {
-    marginTop: 40,
+    marginTop: 80, 
     paddingHorizontal: 20,
     marginBottom: 0,
   },
@@ -69,24 +78,29 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   inputContainer: {
-    marginTop: 0,
+    marginTop: 70, 
     marginBottom: 40,
     paddingHorizontal: 20,
   },
   label: {
     color: 'white',
-    fontSize: 18,
     marginBottom: 10,
   },
   input: {
-    height: 40,
-    backgroundColor: '#333',
-    borderRadius: 5,
-    marginBottom: 15,
-    paddingHorizontal: 10,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: 'rgba(233, 234, 236, 0.80)',
     color: 'white',
-    borderColor: 'white',
-    borderWidth: 1,
+    padding: 10,
+    borderRadius: 8,
+    height: 40, 
+  },
+  inputError: {
+    borderColor: 'red', 
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 5, 
   },
   pageIndicatorContainer: {
     flexDirection: 'row',

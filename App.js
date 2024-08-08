@@ -7,6 +7,7 @@ import { Text } from 'react-native';
 import LoginScreen from './screens/LoginScreen'; 
 import UserNameScreen from './screens/UserNameScreen';
 import ProfileImageScreen from './screens/ProfileImageScreen';
+import MajorAndYearScreen from './screens/MajorAndYearScreen';
 import HomeScreen from './screens/HomeScreen';
 import SearchScreen from './screens/SearchScreen';
 import MessagesScreen from './screens/MessagesScreen';
@@ -163,6 +164,7 @@ export default function App() {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="UserName" component={UserNameScreen} />
         <Stack.Screen name="ProfileImage" component={ProfileImageScreen} />
+        <Stack.Screen name="MajorAndYear" component={MajorAndYearScreen} />
         <Stack.Screen name="Main" component={MainTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>

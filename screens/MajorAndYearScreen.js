@@ -1,33 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { launchImageLibrary } from 'react-native-image-picker';
 import BackIcon from '../components/BackIcon'; 
-import CameraIcon from '../components/CameraIcon'; 
 
-const ProfileImageScreen = () => {
-  const [profileImage, setProfileImage] = useState('https://via.placeholder.com/150');
+const MajorAndYearScreen = () => {
+  const [major, setMajor] = useState('');
+  const [year, setYear] = useState('');
   const navigation = useNavigation();
 
   const handleNext = () => {
-    navigation.navigate('MajorAndYear'); 
+    navigation.navigate('Main'); 
   };
 
   const handleBack = () => {
-    navigation.navigate('UserName');
-  };
-
-  const handleImagePicker = () => {
-    launchImageLibrary({ mediaType: 'photo' }, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        const uri = response.assets[0].uri;
-        setProfileImage(uri);
-      }
-    });
+    navigation.goBack(); 
   };
 
   return (
@@ -39,19 +25,29 @@ const ProfileImageScreen = () => {
         <Text style={styles.title}>프로필 사진을</Text>
         <Text style={styles.title}>골라주세요!</Text>
       </View>
-      <View style={styles.imageContainer}>
-        <Image
-          style={styles.profileImage}
-          source={{ uri: profileImage }} 
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>학과</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="학과를 입력하세요"
+          placeholderTextColor="#666"
+          value={major}
+          onChangeText={setMajor}
         />
-        <TouchableOpacity style={styles.cameraIconContainer} onPress={handleImagePicker}>
-          <CameraIcon width={24} height={24} fill="#FCFCFC" />
-        </TouchableOpacity>
+        <Text style={[styles.label, styles.spacing]}>기수</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="기수를 입력하세요"
+          placeholderTextColor="#666"
+          value={year}
+          onChangeText={setYear}
+          keyboardType="numeric"
+        />
       </View>
       <View style={styles.pageIndicatorContainer}>
         <View style={styles.circle} />
-        <View style={[styles.circle, styles.activeCircle]} />
         <View style={styles.circle} />
+        <View style={[styles.circle, styles.activeCircle]} />
         <View style={styles.circle} />
         <View style={styles.circle} />
       </View>
@@ -67,13 +63,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
     justifyContent: 'space-between',
-    alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 40,
   },
   backButton: {
     position: 'absolute',
-    top: 40,
+    top: 60,
     left: 20,
   },
   titleContainer: {
@@ -89,35 +84,33 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'left', 
   },
-  imageContainer: {
-    position: 'relative',
-    marginBottom: 20,
-    marginTop: 180, 
-    alignItems: 'center',
+  inputContainer: {
+    marginTop: 200, 
   },
-  profileImage: {
-    width: 135,
-    height: 135,
-    borderRadius: 75,
-    backgroundColor: '#444',
+  label: {
+    color: 'white',
+    marginBottom: 10,
   },
-  cameraIconContainer: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 40,
-    height: 40,
-    borderRadius: 25,
-    backgroundColor: '#424242',
-    alignItems: 'center',
-    justifyContent: 'center',
+  spacing: {
+    marginTop: 20, 
+  },
+  input: {
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: 'rgba(233, 234, 236, 0.80)',
+    color: 'white',
+    padding: 10,
+    borderRadius: 8,
+    height: 40, 
   },
   pageIndicatorContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: 100,
+    bottom: 100, 
+    left: 0,
+    right: 0,
   },
   circle: {
     width: 12,
@@ -127,7 +120,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   activeCircle: {
-    backgroundColor: '#FCDC2A',
+    backgroundColor: '#FCDC2A', 
   },
   nextButton: {
     position: 'absolute',
@@ -156,4 +149,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileImageScreen;
+export default MajorAndYearScreen;

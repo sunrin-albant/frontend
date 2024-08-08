@@ -17,6 +17,7 @@ export default function AddCardScreen({ route, navigation }) {
   const [date, setDate] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState(null);
+  const [inputErrors, setInputErrors] = useState({});
 
   useFocusEffect(
     React.useCallback(() => {
@@ -56,31 +57,62 @@ export default function AddCardScreen({ route, navigation }) {
     }
   };
 
-  const handleSubmit = () => {
-    if (tags.length > 2) {
-      Alert.alert('오류', '태그는 최대 2개까지 선택할 수 있습니다.');
-      return;
-    }
-
+  const validateInputs = () => {
+    const errors = {};
+    if (!title) errors.title = '제목을 입력해주세요.';
+    if (!content) errors.content = '본문을 입력해주세요.';
+    if (tags.length > 2) errors.tags = '태그는 최대 2개까지 선택할 수 있습니다.';
     const datePattern = /^\d{4}\.\d{2}\.\d{2}$/;
-    if (!datePattern.test(date)) {
-      Alert.alert('오류', '날짜는 YYYY.MM.DD 형식으로 입력해야 합니다.');
-      return;
+    if (!datePattern.test(date)) errors.date = '날짜는 YYYY.MM.DD 형식으로 입력해야 합니다.';
+    if (!price) errors.price = '포인트를 입력해주세요.';
+    setInputErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleInputChange = (field, value) => {
+    const newErrors = { ...inputErrors };
+    if (value) {
+      delete newErrors[field];
+    } else {
+      newErrors[field] = `올바른 ${field}를 입력해주세요.`;
     }
+    setInputErrors(newErrors);
+    switch (field) {
+      case 'title':
+        setTitle(value);
+        break;
+      case 'content':
+        setContent(value);
+        break;
+      case 'date':
+        setDate(value);
+        break;
+      case 'price':
+        setPrice(value);
+        break;
+      default:
+        break;
+    }
+  };
 
-    const newCard = {
-      id: Date.now().toString(),
-      username,
-      title,
-      content,
-      tags,
-      date,
-      price: parseInt(price, 10),
-      image,
-    };
+  const handleSubmit = () => {
+    if (validateInputs()) {
+      const newCard = {
+        id: Date.now().toString(),
+        username,
+        title,
+        content,
+        tags,
+        date,
+        price: parseInt(price, 10),
+        image,
+      };
 
-    handleAddCard(newCard);
-    navigation.goBack();
+      handleAddCard(newCard);
+      navigation.goBack();
+    } else {
+      Alert.alert('오류', '모든 필드를 올바르게 입력해주세요.');
+    }
   };
 
   const pickImage = async () => {
@@ -122,23 +154,25 @@ export default function AddCardScreen({ route, navigation }) {
             </TouchableOpacity>
             <Text style={styles.label}>제목</Text>
             <TextInput
-              style={[styles.input, styles.titleInput]}
+              style={[styles.input, styles.titleInput, inputErrors.title && styles.inputError]}
               placeholder="제목"
               placeholderTextColor="#666"
               value={title}
-              onChangeText={setTitle}
+              onChangeText={(value) => handleInputChange('title', value)}
               editable
             />
+            {inputErrors.title && <Text style={styles.errorText}>{inputErrors.title}</Text>}
             <Text style={styles.label}>본문</Text>
             <TextInput
-              style={[styles.input, styles.textArea]}
+              style={[styles.input, styles.textArea, inputErrors.content && styles.inputError]}
               placeholder="본문을 입력해 주세요."
               placeholderTextColor="#666"
               value={content}
-              onChangeText={setContent}
+              onChangeText={(value) => handleInputChange('content', value)}
               multiline
               editable
             />
+            {inputErrors.content && <Text style={styles.errorText}>{inputErrors.content}</Text>}
             <Text style={styles.label}>태그</Text>
             <View style={styles.tagContainer}>
               {['심부름', '개발', '디자인', '기타'].map(tag => (
@@ -155,25 +189,27 @@ export default function AddCardScreen({ route, navigation }) {
               <View style={styles.inputWrapper}>
                 <Text style={styles.label}>마감일</Text>
                 <TextInput
-                  style={[styles.input, styles.inputReducedWidth]}
+                  style={[styles.input, styles.inputReducedWidth, inputErrors.date && styles.inputError]}
                   placeholder="YYYY.MM.DD"
                   placeholderTextColor="#666"
                   value={date}
-                  onChangeText={setDate}
+                  onChangeText={(value) => handleInputChange('date', value)}
                   editable
                 />
+                {inputErrors.date && <Text style={styles.errorText}>{inputErrors.date}</Text>}
               </View>
               <View style={styles.inputWrapper}>
                 <Text style={styles.label}>포인트</Text>
                 <TextInput
-                  style={[styles.input, styles.inputReducedWidth]}
+                  style={[styles.input, styles.inputReducedWidth, inputErrors.price && styles.inputError]}
                   placeholder="포인트"
                   placeholderTextColor="#666"
                   value={price}
-                  onChangeText={setPrice}
+                  onChangeText={(value) => handleInputChange('price', value)}
                   keyboardType="numeric"
                   editable
                 />
+                {inputErrors.price && <Text style={styles.errorText}>{inputErrors.price}</Text>}
               </View>
             </View>
           </View>
@@ -261,7 +297,10 @@ const styles = StyleSheet.create({
     fontSize: 16, 
     fontWeight: '500',
     lineHeight: 20, 
-    marginBottom: 30,
+    marginBottom: 10,
+  },
+  inputError: {
+    borderColor: 'red',
   },
   titleInput: {
     color: '#CCC',
@@ -280,7 +319,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 15,
     paddingHorizontal: 15,
-    marginBottom: 30,
+    marginBottom: 10,
     color: '#CCC',
     backgroundColor: '#000',
     ...baseTextStyle,
@@ -365,5 +404,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     lineHeight: 22,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 10,
   },
 });
