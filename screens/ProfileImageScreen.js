@@ -73,12 +73,12 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: 40,
+    top: 100,
     left: 20,
   },
   titleContainer: {
     position: 'absolute',
-    top: 100, 
+    top: 140, 
     left: 20,
     alignItems: 'flex-start', 
   },

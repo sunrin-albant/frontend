@@ -57,42 +57,83 @@ export default function AddCardScreen({ route, navigation }) {
     }
   };
 
+  const isValidDate = (dateString) => {
+    const regex = /^\d{4}\.\d{2}\.\d{2}$/;
+    if (!regex.test(dateString)) return '날짜 형식이 잘못되었습니다. (YYYY.MM.DD 형식으로 입력해주세요)';
+
+    const [year, month, day] = dateString.split('.').map(Number);
+
+    if (year < 2024) return '연도는 2024년 이상이어야 합니다.';
+    if (month < 1 || month > 12) return '월은 1에서 12 사이여야 합니다.';
+    if (day < 1 || day > 31) return '일은 1에서 31 사이여야 합니다.';
+
+    const date = new Date(year, month - 1, day);
+
+    if (
+      date.getFullYear() !== year ||
+      date.getMonth() !== month - 1 ||
+      date.getDate() !== day
+    ) {
+      return '올바른 날짜를 입력해주세요.';
+    }
+
+    return null;
+  };
+
   const validateInputs = () => {
     const errors = {};
     if (!title) errors.title = '제목을 입력해주세요.';
     if (!content) errors.content = '본문을 입력해주세요.';
     if (tags.length > 2) errors.tags = '태그는 최대 2개까지 선택할 수 있습니다.';
-    const datePattern = /^\d{4}\.\d{2}\.\d{2}$/;
-    if (!datePattern.test(date)) errors.date = '날짜는 YYYY.MM.DD 형식으로 입력해야 합니다.';
-    if (!price) errors.price = '포인트를 입력해주세요.';
+
+    const dateError = isValidDate(date);
+    if (dateError) errors.date = dateError;
+
+    if (!price || isNaN(price) || parseInt(price) <= 0) errors.price = '올바른 포인트를 입력해주세요.';
     setInputErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleInputChange = (field, value) => {
     const newErrors = { ...inputErrors };
-    if (value) {
-      delete newErrors[field];
-    } else {
-      newErrors[field] = `올바른 ${field}를 입력해주세요.`;
-    }
-    setInputErrors(newErrors);
     switch (field) {
       case 'title':
+        if (!value) {
+          newErrors.title = '올바른 제목을 입력해주세요.';
+        } else {
+          delete newErrors.title;
+        }
         setTitle(value);
         break;
       case 'content':
+        if (!value) {
+          newErrors.content = '올바른 본문을 입력해주세요.';
+        } else {
+          delete newErrors.content;
+        }
         setContent(value);
         break;
       case 'date':
+        const dateError = isValidDate(value);
+        if (dateError) {
+          newErrors.date = dateError;
+        } else {
+          delete newErrors.date;
+        }
         setDate(value);
         break;
       case 'price':
+        if (!value || isNaN(value) || parseInt(value) <= 0) {
+          newErrors.price = '올바른 포인트를 입력해주세요.';
+        } else {
+          delete newErrors.price;
+        }
         setPrice(value);
         break;
       default:
         break;
     }
+    setInputErrors(newErrors);
   };
 
   const handleSubmit = () => {
@@ -380,10 +421,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   button: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     backgroundColor: '#FFD700',
     height: 70,
     borderTopLeftRadius: 15,
@@ -396,6 +433,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderLeftWidth: 2,
     borderRightWidth: 2,
+    width: '100%', 
+    position: 'absolute',
+    bottom: 0,
   },
   buttonText: {
     ...baseTextStyle,
@@ -403,7 +443,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '600',
     textAlign: 'center',
-    lineHeight: 22,
+    lineHeight: 40,
   },
   errorText: {
     color: 'red',

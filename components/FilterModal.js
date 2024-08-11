@@ -16,7 +16,6 @@ const FilterModal = ({ isVisible, onClose, onFilterChange }) => {
   const [modalVisible, setModalVisible] = useState(isVisible);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [selectedTags, setSelectedTags] = useState([]);
   const [minPoints, setMinPoints] = useState('');
   const [maxPoints, setMaxPoints] = useState('');
 
@@ -24,16 +23,6 @@ const FilterModal = ({ isVisible, onClose, onFilterChange }) => {
   const [isEndDateFocused, setIsEndDateFocused] = useState(false);
   const [isMinPointsFocused, setIsMinPointsFocused] = useState(false);
   const [isMaxPointsFocused, setIsMaxPointsFocused] = useState(false);
-
-  const availableTags = ['전체', '심부름', '개발', '디자인', '기타'];
-
-  const theme = {
-    secondary: '#171717', 
-    selectedTagBackground: '#FFD700',
-    selectedTagTextColor: '#111111',
-    unselectedTagTextColor: '#FFFFFF',
-    highlight: '#FFD700', 
-  };
 
   const snapPoints = useMemo(() => ['30%', '50%'], []);
 
@@ -52,7 +41,7 @@ const FilterModal = ({ isVisible, onClose, onFilterChange }) => {
 
   useEffect(() => {
     if (modalVisible) {
-      sheetRef.current?.snapToIndex(1);
+      sheetRef.current?.snapToIndex(1);  // 여기서 index가 0 또는 1이어야 합니다.
     } else {
       sheetRef.current?.close();
     }
@@ -67,39 +56,17 @@ const FilterModal = ({ isVisible, onClose, onFilterChange }) => {
     onFilterChange({
       startDate,
       endDate,
-      selectedTags,
       minPoints,
       maxPoints,
       ...changes,
     });
   };
 
-  const toggleTag = (tag) => {
-    let updatedTags = [...selectedTags];
-
-    if (tag === '전체') {
-      updatedTags = selectedTags.includes('전체') ? [] : ['전체'];
-    } else {
-      if (selectedTags.includes('전체')) {
-        updatedTags = [tag];
-      } else if (updatedTags.includes(tag)) {
-        updatedTags = updatedTags.filter((t) => t !== tag);
-      } else {
-        if (updatedTags.length < 2) {
-          updatedTags.push(tag);
-        }
-      }
-    }
-
-    setSelectedTags(updatedTags);
-    handleFilterChange({ selectedTags: updatedTags });
-  };
-
   return (
     <BottomSheet
       ref={sheetRef}
       snapPoints={snapPoints}
-      index={-1}
+      index={-1}  // 초기 index 값을 -1로 설정하여 snap하지 않도록 함.
       enablePanDownToClose={true}
       onChange={(index) => {
         if (index === 0) {
@@ -119,36 +86,6 @@ const FilterModal = ({ isVisible, onClose, onFilterChange }) => {
         </TouchableOpacity>
         <Text style={styles.headerText}>필터</Text>
         <ScrollView>
-          {}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>키워드</Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.keywordContainer}
-            >
-              {availableTags.map((tag) => (
-                <TouchableOpacity
-                  key={tag}
-                  style={[
-                    styles.keywordButton,
-                    selectedTags.includes(tag) && styles.keywordButtonSelected,
-                  ]}
-                  onPress={() => toggleTag(tag)}
-                >
-                  <Text
-                    style={[
-                      styles.keywordText,
-                      selectedTags.includes(tag) && styles.keywordTextSelected,
-                    ]}
-                  >
-                    {tag}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-
           {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>마감일</Text>
@@ -305,47 +242,8 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
   },
-  textInput: {
-    backgroundColor: '#333333',
-    borderRadius: 8,
-    paddingVertical: 6, 
-    paddingHorizontal: 12, 
-    color: '#FFFFFF',
-    fontSize: 12, 
-    borderColor: '#7C7C7C', 
-    borderWidth: 2, 
-  },
   focusedInput: {
     borderColor: '#FCFCFC',
-  },
-  keywordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start', 
-    paddingHorizontal: 10,
-  },
-  keywordButton: {
-    display: 'flex',
-    height: 28,
-    paddingVertical: 8,
-    paddingHorizontal: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    borderWidth: 1,
-    backgroundColor: '#171717', 
-    marginHorizontal: 4,
-  },
-  keywordButtonSelected: {
-    backgroundColor: '#FFD700',
-  },
-  keywordText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  keywordTextSelected: {
-    color: '#111111', 
   },
 });
 

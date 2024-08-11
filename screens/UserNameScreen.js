@@ -3,7 +3,7 @@ import { StyleSheet, View, TextInput, TouchableOpacity, Text, SafeAreaView, Aler
 
 const UserNameScreen = ({ navigation }) => {
   const [userName, setUserName] = useState('');
-  const [isInputEmpty, setIsInputEmpty] = useState(false); 
+  const [isInputEmpty, setIsInputEmpty] = useState(false);
 
   const handleNext = () => {
     if (userName.trim() === '') {
@@ -17,7 +17,7 @@ const UserNameScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
+      <View style={styles.titleContainer}>
         <Text style={styles.title}>앱에서 사용할</Text>
         <Text style={styles.title}>이름을 정해주세요!</Text>
       </View>
@@ -25,14 +25,14 @@ const UserNameScreen = ({ navigation }) => {
       <View style={styles.inputContainer}>
         <Text style={styles.label}>이름</Text>
         <TextInput
-          style={[styles.input, isInputEmpty && styles.inputError]} 
+          style={[styles.input, isInputEmpty && styles.inputError]}
           placeholder="이름"
           placeholderTextColor="#999"
           value={userName}
           onChangeText={text => {
             setUserName(text);
             if (text.trim() !== '') {
-              setIsInputEmpty(false); 
+              setIsInputEmpty(false);
             }
           }}
         />
@@ -47,10 +47,7 @@ const UserNameScreen = ({ navigation }) => {
         <View style={styles.circle} />
       </View>
 
-      <TouchableOpacity
-        style={styles.nextButton}
-        onPress={handleNext}
-      >
+      <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
         <Text style={styles.nextButtonText}>다음</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -65,21 +62,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 40,
   },
-  headerContainer: {
-    marginTop: 80, 
-    paddingHorizontal: 20,
-    marginBottom: 0,
+  titleContainer: {
+    position: 'absolute',
+    top: 140, 
+    left: 20,
+    alignItems: 'flex-start',
   },
   title: {
     color: '#FFF',
     fontFamily: 'Pretendard',
     fontSize: 20,
     fontWeight: '700',
-    marginBottom: 5,
+    textAlign: 'left',
   },
   inputContainer: {
-    marginTop: 70, 
-    marginBottom: 40,
+    marginTop: 200,
     paddingHorizontal: 20,
   },
   label: {
@@ -93,20 +90,23 @@ const styles = StyleSheet.create({
     color: 'white',
     padding: 10,
     borderRadius: 8,
-    height: 40, 
+    height: 40,
   },
   inputError: {
-    borderColor: 'red', 
+    borderColor: 'red',
   },
   errorText: {
     color: 'red',
-    marginTop: 5, 
+    marginTop: 5,
   },
   pageIndicatorContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 100,
+    position: 'absolute',
+    bottom: 100,
+    left: 0,
+    right: 0,
   },
   circle: {
     width: 12,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '600',
     textAlign: 'center',
-    lineHeight: 22,
+    lineHeight: 40,  
   },
 });
 

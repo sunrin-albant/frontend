@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Dimensions, Image }
 import * as Font from 'expo-font';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CalendarIcon from '../components/CalendarIcon';
-import AddIcon from '../components/AddIcon';
+import CustomLogo from '../components/CustomLogo';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.9;
@@ -60,10 +60,6 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate('Details', { item });
   };
 
-  const handleAddCard = (newCard) => {
-    setData([...data, { ...newCard, id: data.length + 1, isFavorite: false, favoriteCount: 0 }]);
-  };
-
   useEffect(() => {
     const loadFonts = async () => {
       await Font.loadAsync({
@@ -86,7 +82,9 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.header}>
         <View style={styles.coinContainer}>
           <Image source={antImage} style={styles.coinImage} />
-          <Text style={styles.coinText}>albant</Text>
+          <View style={{marginLeft:4}}>
+            <CustomLogo/>
+          </View>
         </View>
         <View style={styles.iconContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('Search', { data })}>
@@ -149,10 +147,6 @@ const HomeScreen = ({ navigation }) => {
         contentContainerStyle={styles.contentContainer}
         style={styles.list}
       />
-
-      <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('AddCard', { handleAddCard })}>
-        <AddIcon />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -211,7 +205,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 'normal',
+    lineHeight: 20,
     letterSpacing: -0.32,
     marginLeft: 20,
     marginBottom: 20,
@@ -352,17 +346,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     resizeMode: 'cover',
     marginRight: 12,
-  },
-  fab: {
-    position: 'absolute',
-    bottom: 20,
-    right: 16,
-    backgroundColor: '#FCDC2A',
-    width: 56,
-    height: 56,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 

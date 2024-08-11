@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import BackIcon from '../components/BackIcon';
 
 const EmailAndPasswordScreen = () => {
   const [email, setEmail] = useState('');
@@ -8,21 +9,30 @@ const EmailAndPasswordScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation();
 
+  const handleBack = () => {
+    navigation.goBack();
+  };
+
   const handleVerify = () => {
     console.log('인증하기');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        이메일과 비밀번호를{'\n'}입력해주세요!
-      </Text>
+      <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+        <BackIcon />
+      </TouchableOpacity>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>
+          이메일과 비밀번호를{'\n'}입력해주세요!
+        </Text>
+      </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>이메일</Text>
         <TextInput
           style={styles.input}
           placeholder="이메일"
-          placeholderTextColor="#999"
+          placeholderTextColor="#666"
           value={email}
           onChangeText={setEmail}
         />
@@ -30,7 +40,7 @@ const EmailAndPasswordScreen = () => {
         <TextInput
           style={styles.input}
           placeholder="비밀번호"
-          placeholderTextColor="#999"
+          placeholderTextColor="#666"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -39,7 +49,7 @@ const EmailAndPasswordScreen = () => {
         <TextInput
           style={styles.input}
           placeholder="비밀번호 확인"
-          placeholderTextColor="#999"
+          placeholderTextColor="#666"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
@@ -67,38 +77,52 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 40,
   },
+  backButton: {
+    position: 'absolute',
+    top: 100,
+    left: 20,
+  },
+  titleContainer: {
+    position: 'absolute',
+    top: 140, 
+    left: 20,
+    alignItems: 'flex-start', 
+  },
   title: {
     color: '#FFF',
     fontFamily: 'Pretendard',
     fontSize: 20,
     fontWeight: '700',
     textAlign: 'left',
-    marginTop: 100,
-    marginBottom: 20,
     lineHeight: 28,
   },
   inputContainer: {
-    marginTop: 20, 
+    marginTop: 200,
   },
   label: {
     color: 'white',
     marginBottom: 10,
   },
+  spacing: {
+    marginTop: 20,
+  },
   input: {
-    backgroundColor: 'transparent',  
-    borderWidth: 1,                  
-    borderColor: 'rgba(233, 234, 236, 0.80)',  
-    color: 'white',                  
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: 'rgba(233, 234, 236, 0.80)',
+    color: 'white',
     padding: 10,
     borderRadius: 8,
     height: 40,
-    marginBottom: 20,
   },
   pageIndicatorContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 40,
+    position: 'absolute',
+    bottom: 100,
+    left: 0,
+    right: 0,
   },
   circle: {
     width: 12,

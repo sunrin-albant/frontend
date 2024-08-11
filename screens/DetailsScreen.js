@@ -285,10 +285,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   chatButton: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     backgroundColor: '#FFD700',
     height: 70,
     borderTopLeftRadius: 15,
@@ -301,7 +297,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderLeftWidth: 2,
     borderRightWidth: 2,
-    zIndex: 20,
+    width: '100%', 
+    position: 'absolute',
+    bottom: 0,
   },
   chatButtonText: {
     ...baseTextStyle,
@@ -309,6 +307,6 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '600',
     textAlign: 'center',
-    lineHeight: 22,
+    lineHeight: 40, 
   },
 });

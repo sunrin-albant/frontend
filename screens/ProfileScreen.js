@@ -1,31 +1,22 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import CoinIcon from '../assets/Coin.png';
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
 
 export default function ProfileScreen({ navigation }) {
-  
   const navigateToProfileEdit = () => {
-    navigation.navigate('ProfileEdit'); 
+    navigation.navigate('ProfileEdit');
   };
 
   return (
     <View style={styles.container}>
       <Header />
-
-      {}
       <View style={styles.profileSection}>
         <ProfileInfo />
-        <TouchableOpacity
-          style={styles.profileButton}
-          onPress={navigateToProfileEdit} 
-        >
+        <TouchableOpacity style={styles.profileButton} onPress={navigateToProfileEdit}>
           <Text style={styles.profileButtonText}>프로필 수정</Text>
         </TouchableOpacity>
       </View>
-
-      {}
       <ActivitySection />
     </View>
   );
@@ -48,7 +39,7 @@ const ProfileInfo = () => (
       <Text style={styles.class}>소프트웨어과 119기</Text>
     </View>
     <View style={styles.pointsContainer}>
-      <Image source={CoinIcon} style={styles.coinIcon} />
+      <Image source={require('../assets/Coin.png')} style={styles.coinIcon} />
       <Text style={styles.pointsText}>14,000</Text>
     </View>
   </View>
@@ -65,7 +56,7 @@ const ActivitySection = () => (
 
 const ActivityItem = ({ icon, text }) => (
   <View style={styles.activityItem}>
-    <MaterialCommunityIcons name={icon} size={24} color="#fff" />
+    <MaterialCommunityIcons name={icon} size={24} color="#fff" /> 
     <Text style={styles.activityText}>{text}</Text>
   </View>
 );
