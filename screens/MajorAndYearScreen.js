@@ -45,9 +45,9 @@ const MajorAndYearScreen = () => {
         />
       </View>
       <View style={styles.pageIndicatorContainer}>
+        <View style={styles.circle} />
+        <View style={styles.circle} />
         <View style={[styles.circle, styles.activeCircle]} />
-        <View style={styles.circle} />
-        <View style={styles.circle} />
         <View style={styles.circle} />
         <View style={styles.circle} />
       </View>
