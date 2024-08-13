@@ -4,6 +4,7 @@ import * as Font from 'expo-font';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CalendarIcon from '../components/CalendarIcon';
 import CustomLogo from '../components/CustomLogo';
+import usePostsStore from '../stores/postsStore';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.9;
@@ -13,44 +14,11 @@ const coinImage = require('../assets/Coin.png');
 
 const HomeScreen = ({ navigation }) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  const [data, setData] = useState([
-    {
-      id: 1,
-      username: 'user1',
-      title: 'title',
-      tags: ['심부름', '노동'],
-      date: '2022.01.24',
-      price: 2000,
-      image: 'https://via.placeholder.com/50',
-      isFavorite: false,
-      favoriteCount: 0,
-    },
-    {
-      id: 2,
-      username: 'user2',
-      title: 'title2',
-      tags: ['심부름', '디자인'],
-      date: '2024.05.24',
-      price: 3000,
-      image: 'https://via.placeholder.com/50',
-      isFavorite: false,
-      favoriteCount: 0,
-    },
-    {
-      id: 3,
-      username: 'user3',
-      title: 'title3',
-      tags: ['심부름', '기타'],
-      date: '2024.07.24',
-      price: 7000,
-      image: 'https://via.placeholder.com/50',
-      isFavorite: false,
-      favoriteCount: 0,
-    },
-  ]);
+
+  const { posts, setPosts } = usePostsStore();
 
   const handleFavoritePress = (index) => {
-    const updatedData = [...data];
+    const updatedData = [...posts];
     updatedData[index].isFavorite = !updatedData[index].isFavorite;
     updatedData[index].favoriteCount += updatedData[index].isFavorite ? 1 : -1;
     setData(updatedData);
@@ -99,7 +67,7 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.titleText}>현재 인기 많은 알바!</Text>
 
       <FlatList
-        data={data}
+        data={posts}
         renderItem={({ item, index }) => (
           <TouchableOpacity style={styles.card} onPress={() => handleCardPress(item)}>
             <View style={styles.cardContent}>
