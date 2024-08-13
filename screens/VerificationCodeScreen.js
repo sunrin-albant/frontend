@@ -1,76 +1,59 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import BackIcon from '../components/BackIcon';
+import BackIcon from '../components/BackIcon'; 
 
-const EmailAndPasswordScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+const VerificationCodeScreen = () => {
+  const [code, setCode] = useState('');
   const navigation = useNavigation();
 
   const handleBack = () => {
     navigation.goBack();
   };
 
-  const handleVerify = () => {
-    console.log('인증하기 버튼 눌림');
-    console.log('입력된 이메일:', email);
-    console.log('입력된 비밀번호:', password);
-    
-    navigation.navigate('VerificationCode');
+  const handleComplete = () => {
+    console.log('인증번호:', code);
+    navigation.navigate('Main'); 
   };
 
   return (
     <View style={styles.container}>
+      {}
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
         <BackIcon />
       </TouchableOpacity>
+
+      {}
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>
-          이메일과 비밀번호를{'\n'}입력해주세요!
-        </Text>
+        <Text style={styles.title}>이메일로 전송된{'\n'}인증번호를 입력해주세요!</Text>
       </View>
+
+      {}
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>이메일</Text>
+        <Text style={styles.label}>인증번호</Text>
         <TextInput
           style={styles.input}
-          placeholder="이메일"
+          placeholder="인증번호"
           placeholderTextColor="#666"
-          value={email}
-          onChangeText={setEmail}
-          selectionColor="white"  
-        />
-        <Text style={[styles.label, styles.spacing]}>비밀번호</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="비밀번호"
-          placeholderTextColor="#666"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
+          value={code}
+          onChangeText={setCode}
+          keyboardType="numeric"
           selectionColor="white"
         />
-        <Text style={[styles.label, styles.spacing]}>비밀번호 확인</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="비밀번호 확인"
-          placeholderTextColor="#666"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-          selectionColor="white"  
-        />
       </View>
+
+      {}
       <View style={styles.pageIndicatorContainer}>
         <View style={styles.circle} />
         <View style={styles.circle} />
         <View style={styles.circle} />
-        <View style={[styles.circle, styles.activeCircle]} />
         <View style={styles.circle} />
+        <View style={[styles.circle, styles.activeCircle]} />
       </View>
-      <TouchableOpacity style={styles.nextButton} onPress={handleVerify}>
-        <Text style={styles.nextButtonText}>인증하기</Text>
+
+      {}
+      <TouchableOpacity style={styles.completeButton} onPress={handleComplete}>
+        <Text style={styles.completeButtonText}>완료</Text>
       </TouchableOpacity>
     </View>
   );
@@ -93,7 +76,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 140, 
     left: 20,
-    alignItems: 'flex-start', 
+    alignItems: 'flex-start',
   },
   title: {
     color: '#FFF',
@@ -101,7 +84,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     textAlign: 'left',
-    lineHeight: 28,
   },
   inputContainer: {
     marginTop: 200,
@@ -110,11 +92,8 @@ const styles = StyleSheet.create({
     color: 'white',
     marginBottom: 10,
   },
-  spacing: {
-    marginTop: 20,
-  },
   input: {
-    backgroundColor: 'black',
+    backgroundColor: 'transparent',
     borderWidth: 2,
     borderColor: 'rgba(233, 234, 236, 0.80)',
     color: 'white',
@@ -141,7 +120,7 @@ const styles = StyleSheet.create({
   activeCircle: {
     backgroundColor: '#FCDC2A',
   },
-  nextButton: {
+  completeButton: {
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -159,13 +138,12 @@ const styles = StyleSheet.create({
     borderLeftWidth: 2,
     borderRightWidth: 2,
   },
-  nextButtonText: {
+  completeButtonText: {
     color: '#333',
     fontSize: 32,
     fontWeight: '600',
-    textAlign: 'center',
     lineHeight: 40,
   },
 });
 
-export default EmailAndPasswordScreen;
+export default VerificationCodeScreen;

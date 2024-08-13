@@ -53,8 +53,8 @@ const SearchScreen = ({ route, navigation }) => {
   const filteredData = data.filter((item) => {
     
     const tagMatch =
-      filters.selectedTags.length === 0 ||
-      filters.selectedTags.every((tag) => item.tags.includes(tag));
+      (filters.selectedTags && filters.selectedTags.length === 0) ||
+      (filters.selectedTags || []).every((tag) => (item.tags || []).includes(tag));
     
     const searchMatch =
       item.title.includes(searchQuery) || item.username.includes(searchQuery);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -10,6 +10,7 @@ import UserNameScreen from './screens/UserNameScreen';
 import ProfileImageScreen from './screens/ProfileImageScreen';
 import MajorAndYearScreen from './screens/MajorAndYearScreen';
 import EmailAndPasswordScreen from './screens/EmailAndPasswordScreen';
+import VerificationCodeScreen from './screens/VerificationCodeScreen';
 import HomeScreen from './screens/HomeScreen';
 import SearchScreen from './screens/SearchScreen';
 import ProfileScreen from './screens/ProfileScreen';
@@ -44,7 +45,6 @@ function HomeStackScreen() {
         options={{
           presentation: 'modal',
         }}
-        initialParams={{ handleAddCard: (newCard) => console.log('New Card:', newCard) }}
       />
     </Stack.Navigator>
   );
@@ -166,8 +166,10 @@ export default function App() {
         <Stack.Screen name="ProfileImage" component={ProfileImageScreen} />
         <Stack.Screen name="MajorAndYear" component={MajorAndYearScreen} />
         <Stack.Screen name="EmailAndPassword" component={EmailAndPasswordScreen} />
+        <Stack.Screen name="VerificationCode" component={VerificationCodeScreen} />
         <Stack.Screen name="Main" component={MainTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+

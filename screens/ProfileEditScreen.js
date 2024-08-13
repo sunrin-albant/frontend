@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { launchImageLibrary } from 'react-native-image-picker';
+import BackIcon from '../components/BackIcon'; 
 import CameraIcon from '../components/CameraIcon'; 
-import BackIcon from '../components/BackIcon'; // 백아이콘 추가
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; // 알림 아이콘 추가
-import CoinIcon from '../assets/Coin.png'; // 코인 아이콘 이미지 추가
 
-export default function ProfileEditScreen({ navigation }) {
-  const [name, setName] = useState('');
-  const [major, setMajor] = useState('');
-  const [year, setYear] = useState('');
+const ProfileImageScreen = () => {
   const [profileImage, setProfileImage] = useState('https://via.placeholder.com/150');
+  const [name, setName] = useState('');
+  const [department, setDepartment] = useState('');
+  const [generation, setGeneration] = useState('');
+  const navigation = useNavigation();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -27,8 +26,6 @@ export default function ProfileEditScreen({ navigation }) {
               backgroundColor: 'black',
               borderTopColor: '#FCDC2A',
               borderTopWidth: 2,
-              borderTopLeftRadius: 15,
-              borderTopRightRadius: 15,
               height: 70,
               paddingBottom: 10,
               display: 'flex',
@@ -39,7 +36,16 @@ export default function ProfileEditScreen({ navigation }) {
     }, [navigation])
   );
 
-  const handleSave = () => {
+  const handleNext = () => {
+    navigation.navigate('ProfileScreen', {
+      profileImage,
+      name,
+      department,
+      generation,
+    });
+  };
+
+  const handleBack = () => {
     navigation.goBack();
   };
 
@@ -50,31 +56,23 @@ export default function ProfileEditScreen({ navigation }) {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        const uri = response.assets[0].uri;
-        setProfileImage(uri);
+        const uri = response.assets?.[0]?.uri;
+        if (uri) setProfileImage(uri);
       }
     });
   };
 
   return (
     <View style={styles.container}>
-      {/* 헤더 시작 */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
           <BackIcon />
         </TouchableOpacity>
-        <View style={styles.coinContainer}>
-          <Image source={CoinIcon} style={styles.coinIcon} />
-          <Text style={styles.coinText}>14,000</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>프로필 수정하기</Text>
         </View>
-        <TouchableOpacity>
-          <MaterialIcons name="notifications-none" size={24} color="white" />
-        </TouchableOpacity>
       </View>
-      {/* 헤더 끝 */}
 
-      <Text style={styles.title}>프로필 수정</Text>
-      
       <View style={styles.imageContainer}>
         <Image
           style={styles.profileImage}
@@ -85,118 +83,121 @@ export default function ProfileEditScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="이름"
-        placeholderTextColor="#666"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="학과"
-        placeholderTextColor="#666"
-        value={major}
-        onChangeText={setMajor}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="기수"
-        placeholderTextColor="#666"
-        value={year}
-        onChangeText={setYear}
-      />
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>이름</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="이름"
+          placeholderTextColor="#666"
+          value={name}
+          onChangeText={setName}
+          selectionColor="white"
+        />
+        <Text style={[styles.label, styles.spacing]}>학과</Text>
+        <TextInput
+          style={[styles.input, styles.secureInput]}
+          placeholder="학과"
+          placeholderTextColor="#666"
+          value={department}
+          onChangeText={setDepartment}
+        />
+        <Text style={[styles.label, styles.spacing]}>기수</Text>
+        <TextInput
+          style={[styles.input, styles.secureInput]}
+          placeholder="기수"
+          placeholderTextColor="#666"
+          value={generation}
+          onChangeText={setGeneration}
+        />
+      </View>
 
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>저장하기</Text>
+      <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+        <Text style={styles.nextButtonText}>적용하기</Text>
       </TouchableOpacity>
     </View>
   );
-}
-
-const baseTextStyle = {
-  fontFamily: 'Pretendard', 
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 40,
   },
-  header: {
+  headerContainer: {
+    position: 'absolute',
+    top: 100,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: '#000',
-    zIndex: 10,
+    justifyContent: 'center',
   },
-  coinContainer: {
-    flexDirection: 'row',
+  backButton: {
+    position: 'absolute',
+    left: 20,
+  },
+  titleContainer: {
     alignItems: 'center',
-    marginLeft: 4,
-    marginRight: 'auto',
-  },
-  coinIcon: {
-    width: 24,
-    height: 24,
-  },
-  coinText: {
-    ...baseTextStyle,
-    fontSize: 20,
-    fontWeight: '500',
-    color: 'white',
-    marginLeft: 3,
-    lineHeight: 22,
-    textAlign: 'center',
   },
   title: {
-    fontSize: 24,
-    color: 'white',
-    marginBottom: 20,
+    color: '#FFF',
+    fontFamily: 'Pretendard',
+    fontSize: 20,
+    fontWeight: '700',
     textAlign: 'center',
   },
   imageContainer: {
     position: 'relative',
     marginBottom: 20,
+    marginTop: 160,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   profileImage: {
-    width: 90, 
-    height: 90,
-    borderRadius: 75,  
-    backgroundColor: '#ccc',
+    width: 120,
+    height: 120,
+    borderRadius: 60, 
+    backgroundColor: '#444',
   },
   cameraIconContainer: {
     position: 'absolute',
-    bottom: 10,  
-    right: 10,  
+    bottom: 0,
+    right: 0,
     width: 40,
     height: 40,
-    borderRadius: 20,  
+    borderRadius: 20,
     backgroundColor: '#424242',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  input: {
-    height: 48,
-    borderColor: '#FCDC2A',
-    borderWidth: 2,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    color: '#CCC',
-    backgroundColor: '#000',
-    fontSize: 16,
-    fontWeight: '500',
-    lineHeight: 20,
+  inputContainer: {
+    marginTop: 20,
+    width: '100%',
+  },
+  label: {
+    color: 'white',
     marginBottom: 10,
   },
-  saveButton: {
+  spacing: {
+    marginTop: 20,
+  },
+  input: {
+    backgroundColor: 'black',
+    borderWidth: 2,
+    borderColor: 'rgba(233, 234, 236, 0.80)',
+    color: 'white',
+    padding: 10,
+    borderRadius: 8,
+    height: 40,
+  },
+  secureInput: {
+    backgroundColor: 'black',
+    color: 'white',
+  },
+  nextButton: {
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 2,
     borderRightWidth: 2,
   },
-  saveButtonText: {
+  nextButtonText: {
     color: '#333',
     fontSize: 32,
     fontWeight: '600',
@@ -222,3 +223,5 @@ const styles = StyleSheet.create({
     lineHeight: 40,
   },
 });
+
+export default ProfileImageScreen;

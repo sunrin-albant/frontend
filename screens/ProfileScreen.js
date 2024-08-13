@@ -2,22 +2,55 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
+import { useRoute, useNavigation } from '@react-navigation/native';
 
-export default function ProfileScreen({ navigation }) {
+export default function ProfileScreen() {
+  const route = useRoute();
+  const navigation = useNavigation();
+
+  const {
+    profileImage = 'https://via.placeholder.com/150', 
+    name,
+    department,
+    generation
+  } = route.params || {};  
+
+  const displayName = name ? name : '이름';
+  const displayDepartment = department ? department : '학과';
+  const displayGeneration = generation ? generation : '기수';
+
   const navigateToProfileEdit = () => {
     navigation.navigate('ProfileEdit');
+  };
+
+  const handleLogout = () => {
+    navigation.navigate('Login');
   };
 
   return (
     <View style={styles.container}>
       <Header />
       <View style={styles.profileSection}>
-        <ProfileInfo />
+        <ProfileInfo 
+          profileImage={profileImage} 
+          name={displayName} 
+          department={displayDepartment} 
+          generation={displayGeneration} 
+        />
         <TouchableOpacity style={styles.profileButton} onPress={navigateToProfileEdit}>
           <Text style={styles.profileButtonText}>프로필 수정</Text>
         </TouchableOpacity>
       </View>
+
       <ActivitySection />
+
+      <View style={styles.accountSection}>
+        <Text style={styles.accountTitle}>계정</Text>
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <MaterialCommunityIcons name="logout" size={24} color="#fff" />
+          <Text style={styles.logoutText}>로그아웃</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -31,12 +64,15 @@ const Header = () => (
   </View>
 );
 
-const ProfileInfo = () => (
+const ProfileInfo = ({ profileImage, name, department, generation }) => (
   <View style={styles.profileInfo}>
-    <View style={styles.profilePicture} />
+    <Image 
+      source={{ uri: profileImage }} 
+      style={styles.profilePicture} 
+    />
     <View style={styles.userInfo}>
-      <Text style={styles.name}>이름</Text>
-      <Text style={styles.class}>소프트웨어과 119기</Text>
+      <Text style={styles.name}>{name}</Text>
+      <Text style={styles.class}>{`${department} ${generation}`}</Text>
     </View>
     <View style={styles.pointsContainer}>
       <Image source={require('../assets/Coin.png')} style={styles.coinIcon} />
@@ -49,8 +85,8 @@ const ActivitySection = () => (
   <View style={styles.activitySection}>
     <Text style={styles.activityTitle}>나의 활동</Text>
     <ActivityItem icon="heart-outline" text="관심 목록" />
-    <ActivityItem icon="check-circle-outline" text="노동 목록" />
-    <ActivityItem icon="clipboard-check-outline" text="고용 목록" />
+    <ActivityItem icon="check-circle-outline" text="제출한 알바" />
+    <ActivityItem icon="clipboard-check-outline" text="채택된 알바" />
   </View>
 );
 
@@ -175,6 +211,28 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   activityText: {
+    color: '#fff',
+    fontSize: 14,
+    marginLeft: 10,
+    fontFamily: 'Pretendard-Regular',
+  },
+  accountSection: {
+    marginTop: 40,
+    paddingHorizontal: 20,
+  },
+  accountTitle: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    fontFamily: 'Pretendard-Bold',
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  logoutText: {
     color: '#fff',
     fontSize: 14,
     marginLeft: 10,

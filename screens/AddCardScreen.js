@@ -148,13 +148,14 @@ export default function AddCardScreen({ route, navigation }) {
         price: parseInt(price, 10),
         image,
       };
-
-      handleAddCard(newCard);
-      navigation.goBack();
+  
+      handleAddCard(newCard);  
+      navigation.navigate('HomeScreen');
     } else {
       Alert.alert('오류', '모든 필드를 올바르게 입력해주세요.');
     }
   };
+  
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
