@@ -13,7 +13,7 @@ export default function AddCardScreen({ route, navigation }) {
   const [username, setUsername] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState('');
   const [date, setDate] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState(null);
@@ -45,18 +45,6 @@ export default function AddCardScreen({ route, navigation }) {
     }, [navigation])
   );
 
-  const handleTagPress = (tag) => {
-    if (tags.includes(tag)) {
-      setTags(tags.filter(t => t !== tag));
-    } else {
-      if (tags.length < 2) {
-        setTags([...tags, tag]);
-      } else {
-        Alert.alert('오류', '태그는 최대 2개까지 선택할 수 있습니다.');
-      }
-    }
-  };
-
   const isValidDate = (dateString) => {
     const regex = /^\d{4}\.\d{2}\.\d{2}$/;
     if (!regex.test(dateString)) return '날짜 형식이 잘못되었습니다. (YYYY.MM.DD 형식으로 입력해주세요)';
@@ -84,7 +72,8 @@ export default function AddCardScreen({ route, navigation }) {
     const errors = {};
     if (!title) errors.title = '제목을 입력해주세요.';
     if (!content) errors.content = '본문을 입력해주세요.';
-    if (tags.length > 2) errors.tags = '태그는 최대 2개까지 선택할 수 있습니다.';
+    const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+    if (tagsArray.length > 2) errors.tags = '태그는 최대 2개까지 입력할 수 있습니다.';
 
     const dateError = isValidDate(date);
     if (dateError) errors.date = dateError;
@@ -112,6 +101,9 @@ export default function AddCardScreen({ route, navigation }) {
           delete newErrors.content;
         }
         setContent(value);
+        break;
+      case 'tags':
+        setTags(value);
         break;
       case 'date':
         const dateError = isValidDate(value);
@@ -143,19 +135,28 @@ export default function AddCardScreen({ route, navigation }) {
         username,
         title,
         content,
-        tags,
+        tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0),
         date,
         price: parseInt(price, 10),
         image,
       };
-  
+
       handleAddCard(newCard);  
       navigation.navigate('HomeScreen');
+
+      // 입력 필드 초기화
+      setUsername('');
+      setTitle('');
+      setContent('');
+      setTags('');
+      setDate('');
+      setPrice('');
+      setImage(null);
+      setInputErrors({});
     } else {
       Alert.alert('오류', '모든 필드를 올바르게 입력해주세요.');
     }
   };
-  
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -215,18 +216,16 @@ export default function AddCardScreen({ route, navigation }) {
               editable
             />
             {inputErrors.content && <Text style={styles.errorText}>{inputErrors.content}</Text>}
-            <Text style={styles.label}>태그</Text>
-            <View style={styles.tagContainer}>
-              {['심부름', '개발', '디자인', '기타'].map(tag => (
-                <TouchableOpacity
-                  key={tag}
-                  style={[styles.tag, tags.includes(tag) && styles.selectedTag]}
-                  onPress={() => handleTagPress(tag)}
-                >
-                  <Text style={[styles.tagText, tags.includes(tag) && styles.selectedTagText]}>{tag}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <Text style={styles.label}>해시태그</Text>
+            <TextInput
+              style={[styles.input, styles.tagInput, inputErrors.tags && styles.inputError]}
+              placeholder="해시태그 (최대 2개, 쉼표로 구분)"
+              placeholderTextColor="#666"
+              value={tags}
+              onChangeText={(value) => handleInputChange('tags', value)}
+              editable
+            />
+            {inputErrors.tags && <Text style={styles.errorText}>{inputErrors.tags}</Text>}
             <View style={styles.rowContainer}>
               <View style={styles.inputWrapper}>
                 <Text style={styles.label}>마감일</Text>
@@ -313,12 +312,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   imagePicker: {
-    width: 80,
-    height: 80,
+    width: '100%',
+    height: 300,
     backgroundColor: '#333',
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
+    alignItems:'center',
     alignSelf: 'flex-start',
     marginBottom: 30, 
   },
@@ -345,6 +345,13 @@ const styles = StyleSheet.create({
     borderColor: 'red',
   },
   titleInput: {
+    color: '#CCC',
+    ...baseTextStyle,
+    fontSize: 16, 
+    fontWeight: '500',
+    lineHeight: 20, 
+  },
+  tagInput: {
     color: '#CCC',
     ...baseTextStyle,
     fontSize: 16, 
@@ -381,36 +388,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 22,
     marginBottom: 8,
-  },
-  tagContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginBottom: 30,
-  },
-  tag: {
-    backgroundColor: '#FFD700',
-    borderRadius: 4,
-    marginRight: 8,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 64,
-    height: 32,
-    paddingHorizontal: 8,
-  },
-  selectedTag: {
-    backgroundColor: '#666',
-  },
-  tagText: {
-    ...baseTextStyle,
-    color: 'var(--secondary, #171717)',
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '600',
-    lineHeight: 22,
-  },
-  selectedTagText: {
-    color: '#999999',
   },
   rowContainer: {
     flexDirection: 'row',

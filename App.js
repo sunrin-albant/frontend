@@ -21,6 +21,7 @@ import ProfileEditScreen from './screens/ProfileEditScreen';
 import HomeIcon from './components/HomeIcon';
 import ProfileIcon from './components/ProfileIcon';
 import AddIcon from './components/AddIcon';
+import usePostsStore from './stores/postsStore';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -60,6 +61,12 @@ function ProfileStackScreen() {
 }
 
 function MainTabNavigator({ navigation }) {
+  const { posts, setPosts } = usePostsStore();
+
+  const handleAddCard = (newCard) => {
+    setPosts([...posts, newCard]);
+  }
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -123,7 +130,7 @@ function MainTabNavigator({ navigation }) {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
-              onPress={() => navigation.navigate('AddCard', { handleAddCard: (newCard) => console.log('New Card:', newCard) })}
+              onPress={() => navigation.navigate('AddCard', { handleAddCard: (newCard) => handleAddCard(newCard) })}
             >
               <View
                 style={{
