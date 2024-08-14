@@ -1,8 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import usePostsStore from '../stores/postsStore';
+import CalendarIcon from '../components/CalendarIcon'; // Import the CalendarIcon component
+
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width * 0.9;
 
 const FavoritesScreen = () => {
   const navigation = useNavigation();
@@ -10,36 +14,40 @@ const FavoritesScreen = () => {
 
   const favoriteCards = posts.filter(post => post.isFavorite);
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item, index }) => (
     <TouchableOpacity 
-      style={styles.cardContainer} 
+      style={styles.card} 
       onPress={() => navigation.navigate('CardDetail', { card: item })}
     >
-      <Image source={{ uri: item.image }} style={styles.cardImage} />
-      <View style={styles.cardInfo}>
-        <Text style={styles.username}>{item.username}</Text>
-        <Text style={styles.title}>{item.title}</Text>
-        <View style={styles.tagContainer}>
-          {item.tags.map((tag, i) => (
-            <View key={i} style={styles.tag}>
-              <Text style={styles.tagText}>{tag}</Text>
+      <View style={styles.cardContent}>
+        <View style={styles.textAndImageContainer}>
+          <Image source={{ uri: item.image }} style={styles.profileImage} />
+          <View style={styles.textContainer}>
+            <Text style={styles.username}>{item.username}</Text>
+            <Text style={styles.title}>{item.title}</Text>
+            <View style={styles.tagContainer}>
+              {item.tags.map((tag, i) => (
+                <View key={i} style={styles.tag}>
+                  <Text style={styles.tagText}>{tag}</Text>
+                </View>
+              ))}
             </View>
-          ))}
+          </View>
         </View>
-        <View style={styles.footer}>
-          <View style={styles.dateContainer}>
-            <MaterialIcons name="date-range" size={14} color="#FFF" />
-            <Text style={styles.date}> {item.date}까지</Text>
-          </View>
-          <View style={styles.priceContainer}>
-            <Image source={require('../assets/Coin.png')} style={styles.coinImageSmall} />
-            <Text style={styles.price}>{item.price.toLocaleString()}</Text>
-          </View>
+        <View style={styles.favoriteContainer}>
+          <MaterialIcons name="favorite" size={24} color="#F00" />
+          <Text style={styles.favoriteCount}>{item.favoriteCount}</Text>
         </View>
       </View>
-      <View style={styles.favoriteContainer}>
-        <MaterialIcons name="favorite" size={24} color="#F00" />
-        <Text style={styles.favoriteCount}>{item.favoriteCount}</Text>
+      <View style={styles.footer}>
+        <View style={styles.dateContainer}>
+          <CalendarIcon style={styles.calendarIcon} />
+          <Text style={styles.date}> {item.date}까지</Text>
+        </View>
+        <View style={styles.priceContainer}>
+          <Image source={require('../assets/Coin.png')} style={styles.coinImageSmall} />
+          <Text style={styles.price}>{item.price.toLocaleString()}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -52,6 +60,8 @@ const FavoritesScreen = () => {
           data={favoriteCards}
           renderItem={renderItem}
           keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.contentContainer}
+          style={styles.list}
         />
       ) : (
         <Text style={styles.noFavoritesText}>관심 목록이 비어 있습니다.</Text>
@@ -64,8 +74,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    paddingHorizontal: 20,
     paddingTop: 40,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
   pageTitle: {
     color: '#fff',
@@ -73,54 +84,103 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     fontFamily: 'Pretendard-Bold',
+    marginLeft: 20,
   },
-  cardContainer: {
-    flexDirection: 'row',
-    marginBottom: 15,
-    backgroundColor: '#171717',
+  contentContainer: {
+    paddingBottom: 100,
+    alignItems: 'flex-start',
+    paddingHorizontal: 20,
+  },
+  list: {
+    flex: 1,
+    width: '100%',
+  },
+  card: {
     borderRadius: 8,
-    padding: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.09)',
+    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    padding: 16,
+    marginBottom: 24,
+    width: CARD_WIDTH,
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  cardContent: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  cardImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
-  },
-  cardInfo: {
+  textAndImageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
-    paddingHorizontal: 10,
+    marginRight: 12,
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: 'center',
   },
   username: {
     color: '#CCC',
-    fontSize: 12,
     fontFamily: 'Pretendard-Regular',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    lineHeight: 20,
+    letterSpacing: -0.28,
+    marginBottom: 4,
   },
   title: {
-    color: '#FFF',
+    color: '#FCFCFC',
+    fontFamily: 'Pretendard-Regular',
     fontSize: 16,
-    fontFamily: 'Pretendard-Bold',
+    fontWeight: '400',
+    lineHeight: 22,
+    letterSpacing: -0.64,
     marginBottom: 4,
   },
   tagContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 8,
   },
   tag: {
-    backgroundColor: '#574F2A',
-    borderRadius: 4,
+    display: 'flex',
     paddingVertical: 3,
-    paddingHorizontal: 6,
-    marginRight: 5,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    backgroundColor: 'rgba(252, 220, 42, 0.20)',
+    marginRight: 4,
   },
   tagText: {
     color: '#FCDC2A',
-    fontSize: 12,
+    textAlign: 'center',
     fontFamily: 'Pretendard-Regular',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 18,
+  },
+  favoriteContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  favoriteCount: {
+    color: '#FFF',
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 12,
+    marginTop: 4,
   },
   footer: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 8,
   },
@@ -128,9 +188,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  calendarIcon: {
+    marginRight: 2,
+  },
   date: {
-    color: '#FFF',
-    fontSize: 12,
+    color: '#FCFCFC',
+    fontSize: 14,
     fontFamily: 'Pretendard-Regular',
   },
   priceContainer: {
@@ -138,23 +201,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   price: {
-    color: '#FFF',
-    fontSize: 14,
-    fontFamily: 'Pretendard-Bold',
-  },
-  coinImageSmall: {
-    width: 14,
-    height: 14,
-    marginRight: 4,
-  },
-  favoriteContainer: {
-    alignItems: 'center',
-  },
-  favoriteCount: {
-    color: '#FFF',
+    color: '#ffffff',
     fontSize: 14,
     fontFamily: 'Pretendard-Regular',
-    marginTop: 4,
+  },
+  profileImage: {
+    width: 70,
+    height: 70,
+    borderRadius: 8,
+    resizeMode: 'cover',
+    marginRight: 12,
   },
   noFavoritesText: {
     color: '#fff',
@@ -162,6 +218,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     fontFamily: 'Pretendard-Regular',
+  },
+  coinImageSmall: {
+    width: 20,
+    height: 20,
+    marginRight: 4,
   },
 });
 
