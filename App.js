@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
@@ -17,6 +17,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import DetailsScreen from './screens/DetailsScreen';
 import AddCardScreen from './screens/AddCardScreen';
 import ProfileEditScreen from './screens/ProfileEditScreen';
+import FavoritesScreen from './screens/FavoritesScreen';
 
 import HomeIcon from './components/HomeIcon';
 import ProfileIcon from './components/ProfileIcon';
@@ -34,6 +35,7 @@ const MyTheme = {
   },
 };
 
+// HomeStackScreen 구성
 function HomeStackScreen() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, ...TransitionPresets.SlideFromRightIOS }}>
@@ -56,16 +58,16 @@ function ProfileStackScreen() {
     <Stack.Navigator screenOptions={{ headerShown: false, ...TransitionPresets.SlideFromRightIOS }}>
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
+      <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />  
     </Stack.Navigator>
   );
 }
-
 function MainTabNavigator({ navigation }) {
   const { posts, setPosts } = usePostsStore();
 
   const handleAddCard = (newCard) => {
     setPosts([...posts, newCard]);
-  }
+  };
 
   return (
     <Tab.Navigator
@@ -179,4 +181,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-

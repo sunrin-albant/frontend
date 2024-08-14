@@ -21,8 +21,9 @@ const HomeScreen = ({ navigation }) => {
     const updatedData = [...posts];
     updatedData[index].isFavorite = !updatedData[index].isFavorite;
     updatedData[index].favoriteCount += updatedData[index].isFavorite ? 1 : -1;
-    setData(updatedData);
+    setPosts(updatedData); 
   };
+  
 
   const handleCardPress = (item) => {
     navigation.navigate('Details', { item });

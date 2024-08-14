@@ -107,7 +107,6 @@ const styles = StyleSheet.create({
     zIndex: 20,
   },
   
-
   loginButtonText: {
     color: '#333',
     fontSize: 32,

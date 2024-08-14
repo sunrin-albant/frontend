@@ -42,7 +42,7 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      <ActivitySection />
+      <ActivitySection navigation={navigation} />
 
       <View style={styles.accountSection}>
         <Text style={styles.accountTitle}>계정</Text>
@@ -81,20 +81,24 @@ const ProfileInfo = ({ profileImage, name, department, generation }) => (
   </View>
 );
 
-const ActivitySection = () => (
+const ActivitySection = ({ navigation }) => (
   <View style={styles.activitySection}>
     <Text style={styles.activityTitle}>나의 활동</Text>
-    <ActivityItem icon="heart-outline" text="관심 목록" />
+    <ActivityItem 
+      icon="heart-outline" 
+      text="관심 목록" 
+      navigateTo={() => navigation.navigate('FavoritesScreen', { favoriteCards: [] })}
+    />
     <ActivityItem icon="check-circle-outline" text="제출한 알바" />
     <ActivityItem icon="clipboard-check-outline" text="채택된 알바" />
   </View>
 );
 
-const ActivityItem = ({ icon, text }) => (
-  <View style={styles.activityItem}>
+const ActivityItem = ({ icon, text, navigateTo }) => (
+  <TouchableOpacity style={styles.activityItem} onPress={navigateTo}>
     <MaterialCommunityIcons name={icon} size={24} color="#fff" /> 
     <Text style={styles.activityText}>{text}</Text>
-  </View>
+  </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
