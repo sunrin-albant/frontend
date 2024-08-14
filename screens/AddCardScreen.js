@@ -6,6 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import CoinIcon from '../assets/Coin.png';
 import BackIcon from '../components/BackIcon';
 import ImagePickerIcon from '../components/ImagePickerIcon';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function AddCardScreen({ route, navigation }) {
   const { handleAddCard } = route.params;
@@ -14,10 +15,11 @@ export default function AddCardScreen({ route, navigation }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(null);
   const [price, setPrice] = useState('');
   const [image, setImage] = useState(null);
   const [inputErrors, setInputErrors] = useState({});
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -45,29 +47,6 @@ export default function AddCardScreen({ route, navigation }) {
     }, [navigation])
   );
 
-  const isValidDate = (dateString) => {
-    const regex = /^\d{4}\.\d{2}\.\d{2}$/;
-    if (!regex.test(dateString)) return '날짜 형식이 잘못되었습니다. (YYYY.MM.DD 형식으로 입력해주세요)';
-
-    const [year, month, day] = dateString.split('.').map(Number);
-
-    if (year < 2024) return '연도는 2024년 이상이어야 합니다.';
-    if (month < 1 || month > 12) return '월은 1에서 12 사이여야 합니다.';
-    if (day < 1 || day > 31) return '일은 1에서 31 사이여야 합니다.';
-
-    const date = new Date(year, month - 1, day);
-
-    if (
-      date.getFullYear() !== year ||
-      date.getMonth() !== month - 1 ||
-      date.getDate() !== day
-    ) {
-      return '올바른 날짜를 입력해주세요.';
-    }
-
-    return null;
-  };
-
   const validateInputs = () => {
     const errors = {};
     if (!title) errors.title = '제목을 입력해주세요.';
@@ -75,8 +54,7 @@ export default function AddCardScreen({ route, navigation }) {
     const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
     if (tagsArray.length > 2) errors.tags = '태그는 최대 2개까지 입력할 수 있습니다.';
 
-    const dateError = isValidDate(date);
-    if (dateError) errors.date = dateError;
+    if (date && date.getFullYear() < 2024) errors.date = '연도는 2024년 이상이어야 합니다.';
 
     if (!price || isNaN(price) || parseInt(price) <= 0) errors.price = '올바른 포인트를 입력해주세요.';
     setInputErrors(errors);
@@ -105,15 +83,6 @@ export default function AddCardScreen({ route, navigation }) {
       case 'tags':
         setTags(value);
         break;
-      case 'date':
-        const dateError = isValidDate(value);
-        if (dateError) {
-          newErrors.date = dateError;
-        } else {
-          delete newErrors.date;
-        }
-        setDate(value);
-        break;
       case 'price':
         if (!value || isNaN(value) || parseInt(value) <= 0) {
           newErrors.price = '올바른 포인트를 입력해주세요.';
@@ -136,7 +105,7 @@ export default function AddCardScreen({ route, navigation }) {
         title,
         content,
         tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0),
-        date,
+        date: date ? date.toISOString().split('T')[0] : '',
         price: parseInt(price, 10),
         image,
       };
@@ -144,12 +113,11 @@ export default function AddCardScreen({ route, navigation }) {
       handleAddCard(newCard);  
       navigation.navigate('HomeScreen');
 
-      // 입력 필드 초기화
       setUsername('');
       setTitle('');
       setContent('');
       setTags('');
-      setDate('');
+      setDate(null);
       setPrice('');
       setImage(null);
       setInputErrors({});
@@ -189,7 +157,7 @@ export default function AddCardScreen({ route, navigation }) {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.content}>
             <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-              {image ? (
+            {image ? (
                 <Image source={{ uri: image }} style={styles.image} />
               ) : (
                 <ImagePickerIcon />
@@ -207,14 +175,15 @@ export default function AddCardScreen({ route, navigation }) {
             {inputErrors.title && <Text style={styles.errorText}>{inputErrors.title}</Text>}
             <Text style={styles.label}>본문</Text>
             <TextInput
-              style={[styles.input, styles.textArea, inputErrors.content && styles.inputError]}
-              placeholder="본문을 입력해 주세요."
-              placeholderTextColor="#666"
-              value={content}
-              onChangeText={(value) => handleInputChange('content', value)}
-              multiline
-              editable
+            style={[styles.input, styles.textArea, inputErrors.content && styles.inputError]}
+            placeholder="본문"
+            placeholderTextColor="#666"
+            value={content}
+            onChangeText={(value) => handleInputChange('content', value)}
+            multiline
+            editable
             />
+
             {inputErrors.content && <Text style={styles.errorText}>{inputErrors.content}</Text>}
             <Text style={styles.label}>해시태그</Text>
             <TextInput
@@ -229,15 +198,43 @@ export default function AddCardScreen({ route, navigation }) {
             <View style={styles.rowContainer}>
               <View style={styles.inputWrapper}>
                 <Text style={styles.label}>마감일</Text>
-                <TextInput
-                  style={[styles.input, styles.inputReducedWidth, inputErrors.date && styles.inputError]}
-                  placeholder="YYYY.MM.DD"
-                  placeholderTextColor="#666"
-                  value={date}
-                  onChangeText={(value) => handleInputChange('date', value)}
-                  editable
-                />
+                <TouchableOpacity
+                  style={[
+                    styles.input, 
+                    styles.inputReducedWidth, 
+                    inputErrors.date && styles.inputError,
+                    { paddingHorizontal: 16, paddingVertical: 10 }
+                  ]}
+                  onPress={() => setShowDatePicker(true)}
+                >
+                  <Text style={{ 
+                    color: '#CCC', 
+                    fontSize: 16, 
+                    fontWeight: '500', 
+                    textAlignVertical: 'center',
+                    paddingVertical: 5, 
+                    paddingHorizontal: 0
+                  }}>
+                    {date ? date.toISOString().split('T')[0].replace(/-/g, '.') : 'YYYY.MM.DD'}
+                  </Text>
+                </TouchableOpacity>
                 {inputErrors.date && <Text style={styles.errorText}>{inputErrors.date}</Text>}
+                {showDatePicker && (
+            <View style={[styles.datePickerContainer, { width: '90%' }]}>
+                <DateTimePicker
+                value={date || new Date()}
+                mode="date"
+                display="default"
+                onChange={(event, selectedDate) => {
+                    setShowDatePicker(false);
+                    if (selectedDate) {
+                    setDate(selectedDate);
+                    }
+                }}
+                textColor="#FFF"  
+                />
+            </View>
+            )}
               </View>
               <View style={styles.inputWrapper}>
                 <Text style={styles.label}>포인트</Text>
@@ -318,7 +315,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    alignItems:'center',
     alignSelf: 'flex-start',
     marginBottom: 30, 
   },
@@ -427,5 +423,13 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 12,
     marginBottom: 10,
+  },
+  datePickerContainer: {
+    marginBottom: 10,
+    alignItems: 'flex-start',
+    justifyContent: 'center',  
+    backgroundColor: '#333',   
+    borderRadius: 45,           
+    padding: 5,                 
   },
 });
