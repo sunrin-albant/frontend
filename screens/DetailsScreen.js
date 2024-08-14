@@ -41,12 +41,20 @@ export default function DetailsScreen({ route, navigation }) {
     }, [navigation])
   );
 
+  const handleBackPress = () => {
+    if (route.params?.from === 'Favorites') {
+      navigation.goBack();
+    } else {
+      navigation.goBack();
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.imageHeader}>
         <Image source={{ uri: item.image }} style={styles.backgroundImage} />
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={handleBackPress}>
             <BackIcon />
           </TouchableOpacity>
           <View style={styles.coinContainer}>
@@ -94,7 +102,9 @@ export default function DetailsScreen({ route, navigation }) {
           <Text style={styles.title}>{item.title}</Text>
           <View style={styles.tagContainer}>
             {item.tags.map((tag, i) => (
-              <Text key={i} style={styles.tag}>{tag}</Text>
+              <View key={i} style={styles.tag}>
+                <Text style={styles.tagText}>#{tag}</Text>
+              </View>
             ))}
           </View>
           <Text style={styles.description}>{item.content}</Text>
@@ -267,16 +277,27 @@ const styles = StyleSheet.create({
   },
   tagContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 8,
   },
   tag: {
-    ...baseTextStyle,
-    backgroundColor: '#FFD700',
-    color: '#333',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 4,
+    display: 'flex',
+    paddingVertical: 3,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    backgroundColor: 'rgba(252, 220, 42, 0.20)',
     marginRight: 4,
+  },
+  tagText: {
+    color: '#FCDC2A',  
+    textAlign: 'center',
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 18,
   },
   description: {
     ...baseTextStyle,

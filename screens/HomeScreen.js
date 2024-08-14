@@ -19,14 +19,31 @@ const HomeScreen = ({ navigation }) => {
 
   const handleFavoritePress = (index) => {
     const updatedData = [...posts];
+    if (updatedData[index].favoriteCount === undefined) {
+      updatedData[index].favoriteCount = 0;
+    }
     updatedData[index].isFavorite = !updatedData[index].isFavorite;
     updatedData[index].favoriteCount += updatedData[index].isFavorite ? 1 : -1;
     setPosts(updatedData); 
   };
-  
 
   const handleCardPress = (item) => {
     navigation.navigate('Details', { item });
+  };
+
+  const addNewCard = () => {
+    const newCard = {
+      id: posts.length + 1,
+      image: 'new_image_url',
+      username: 'New User',
+      title: 'New Title',
+      tags: ['new', 'tag'],
+      isFavorite: false,
+      favoriteCount: 0, 
+      date: '2024-08-31',
+      price: 1000,
+    };
+    setPosts([...posts, newCard]);
   };
 
   useEffect(() => {
@@ -51,8 +68,8 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.header}>
         <View style={styles.coinContainer}>
           <Image source={antImage} style={styles.coinImage} />
-          <View style={{marginLeft:4}}>
-            <CustomLogo/>
+          <View style={{ marginLeft: 4 }}>
+            <CustomLogo />
           </View>
         </View>
         <View style={styles.iconContainer}>
@@ -80,7 +97,7 @@ const HomeScreen = ({ navigation }) => {
                   <View style={styles.tagContainer}>
                     {item.tags.map((tag, i) => (
                       <View key={i} style={styles.tag}>
-                        <Text style={styles.tagText}>{tag}</Text>
+                        <Text style={styles.tagText}>#{tag}</Text>
                       </View>
                     ))}
                   </View>
@@ -97,7 +114,7 @@ const HomeScreen = ({ navigation }) => {
                     color={item.isFavorite ? '#F00' : '#FFF'}
                   />
                 </TouchableOpacity>
-                <Text style={styles.favoriteCount}>{item.favoriteCount}</Text>
+                <Text style={styles.favoriteCount}>{item.favoriteCount || 0}</Text>
               </View>
             </View>
             <View style={styles.footer}>

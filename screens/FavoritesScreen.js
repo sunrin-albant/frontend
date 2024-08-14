@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, Dimensions }
 import { useNavigation } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import usePostsStore from '../stores/postsStore';
-import CalendarIcon from '../components/CalendarIcon'; // Import the CalendarIcon component
+import CalendarIcon from '../components/CalendarIcon';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.9;
@@ -14,10 +14,10 @@ const FavoritesScreen = () => {
 
   const favoriteCards = posts.filter(post => post.isFavorite);
 
-  const renderItem = ({ item, index }) => (
+  const renderItem = ({ item }) => (
     <TouchableOpacity 
       style={styles.card} 
-      onPress={() => navigation.navigate('CardDetail', { card: item })}
+      onPress={() => navigation.navigate('Details', { item })} 
     >
       <View style={styles.cardContent}>
         <View style={styles.textAndImageContainer}>
@@ -28,7 +28,7 @@ const FavoritesScreen = () => {
             <View style={styles.tagContainer}>
               {item.tags.map((tag, i) => (
                 <View key={i} style={styles.tag}>
-                  <Text style={styles.tagText}>{tag}</Text>
+                  <Text style={styles.tagText}>#{tag}</Text>
                 </View>
               ))}
             </View>
@@ -54,7 +54,22 @@ const FavoritesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.pageTitle}>관심 목록</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons name="arrow-back-ios" size={24} color="white" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>관심목록</Text>
+        <View style={styles.headerIcons}>
+          <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+            <MaterialIcons name="search" size={24} color="white" style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+            <MaterialIcons name="notifications-none" size={24} color="white" style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <Text style={styles.pageTitle}></Text>
       {favoriteCards.length > 0 ? (
         <FlatList
           data={favoriteCards}
@@ -78,6 +93,29 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#000',
+  },
+  headerTitle: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: 'bold',
+    flex: 1,
+    textAlign: 'center',
+  },
+  headerIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  icon: {
+    marginLeft: 15,
+  },
   pageTitle: {
     color: '#fff',
     fontSize: 18,
@@ -85,6 +123,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: 'Pretendard-Bold',
     marginLeft: 20,
+    marginTop: 20, 
+    textAlign: 'center',
+    width: '100%',
   },
   contentContainer: {
     paddingBottom: 100,
@@ -213,11 +254,13 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   noFavoritesText: {
+    flex: 1,
     color: '#fff',
     textAlign: 'center',
-    marginTop: 20,
     fontSize: 16,
     fontFamily: 'Pretendard-Regular',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   coinImageSmall: {
     width: 20,

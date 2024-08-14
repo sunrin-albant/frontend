@@ -114,7 +114,7 @@ const SearchScreen = ({ route, navigation }) => {
                   <View style={styles.tagContainer}>
                     {item.tags.map((tag, i) => (
                       <View key={i} style={styles.tag}>
-                        <Text style={styles.tagText}>{tag}</Text>
+                        <Text style={styles.tagText}>#{tag}</Text>
                       </View>
                     ))}
                   </View>
