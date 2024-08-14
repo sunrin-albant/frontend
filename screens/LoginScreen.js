@@ -88,6 +88,10 @@ const styles = StyleSheet.create({
     fontSize:12,
   },
   loginButton: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: '#FFD700',
     height: 70,
     borderTopLeftRadius: 15,
@@ -100,10 +104,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderLeftWidth: 2,
     borderRightWidth: 2,
-    width: '100%', 
-    position: 'absolute',
-    bottom: 0,
+    zIndex: 20,
   },
+  
+
   loginButtonText: {
     color: '#333',
     fontSize: 32,

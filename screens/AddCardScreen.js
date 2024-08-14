@@ -208,7 +208,7 @@ export default function AddCardScreen({ route, navigation }) {
                   onPress={() => setShowDatePicker(true)}
                 >
                   <Text style={{ 
-                    color: '#CCC', 
+                    color: '#666', 
                     fontSize: 16, 
                     fontWeight: '500', 
                     textAlignVertical: 'center',
