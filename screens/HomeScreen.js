@@ -27,9 +27,15 @@ const HomeScreen = ({ navigation }) => {
     setPosts(updatedData); 
   };
 
-  const handleCardPress = (item) => {
-    navigation.navigate('Details', { item });
+  const handleCardPress = (item, index) => {
+    navigation.navigate('Details', {
+      item,
+      index,
+      posts,
+      setPosts, 
+    });
   };
+  
 
   const addNewCard = () => {
     const newCard = {

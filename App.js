@@ -18,6 +18,7 @@ import DetailsScreen from './screens/DetailsScreen';
 import AddCardScreen from './screens/AddCardScreen';
 import ProfileEditScreen from './screens/ProfileEditScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
+import SubmissionScreen from './screens/SubmissionScreen';
 
 import HomeIcon from './components/HomeIcon';
 import ProfileIcon from './components/ProfileIcon';
@@ -35,7 +36,6 @@ const MyTheme = {
   },
 };
 
-// HomeStackScreen 구성
 function HomeStackScreen() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, ...TransitionPresets.SlideFromRightIOS }}>
@@ -49,19 +49,26 @@ function HomeStackScreen() {
           presentation: 'modal',
         }}
       />
+      <Stack.Screen 
+        name="SubmissionScreen" 
+        component={SubmissionScreen} 
+        options={{ tabBarStyle: { display: 'none' } }} 
+      /> 
     </Stack.Navigator>
   );
 }
+
 
 function ProfileStackScreen() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, ...TransitionPresets.SlideFromRightIOS }}>
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
-      <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />  
+      <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
     </Stack.Navigator>
   );
 }
+
 function MainTabNavigator({ navigation }) {
   const { posts, setPosts } = usePostsStore();
 

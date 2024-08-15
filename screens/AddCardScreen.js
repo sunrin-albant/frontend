@@ -11,7 +11,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 export default function AddCardScreen({ route, navigation }) {
   const { handleAddCard } = route.params;
 
-  const [username, setUsername] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState('');
@@ -51,12 +50,10 @@ export default function AddCardScreen({ route, navigation }) {
     const errors = {};
     if (!title) errors.title = '제목을 입력해주세요.';
     if (!content) errors.content = '본문을 입력해주세요.';
-    const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
-    if (tagsArray.length > 2) errors.tags = '태그는 최대 2개까지 입력할 수 있습니다.';
-
-    if (date && date.getFullYear() < 2024) errors.date = '연도는 2024년 이상이어야 합니다.';
-
+    if (!tags) errors.tags = '해시태그를 입력해주세요.';
+    if (!date) errors.date = '마감일을 선택해주세요.';
     if (!price || isNaN(price) || parseInt(price) <= 0) errors.price = '올바른 포인트를 입력해주세요.';
+    
     setInputErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -66,7 +63,7 @@ export default function AddCardScreen({ route, navigation }) {
     switch (field) {
       case 'title':
         if (!value) {
-          newErrors.title = '올바른 제목을 입력해주세요.';
+          newErrors.title = '제목을 입력해주세요.';
         } else {
           delete newErrors.title;
         }
@@ -81,6 +78,13 @@ export default function AddCardScreen({ route, navigation }) {
         setContent(value);
         break;
       case 'tags':
+        if (!value) {
+          newErrors.tags = '해시태그를 입력해주세요.';
+        } else if (value.split(',').filter(tag => tag.trim().length > 0).length > 2) {
+          newErrors.tags = '태그는 최대 2개까지 입력할 수 있습니다.';
+        } else {
+          delete newErrors.tags;
+        }
         setTags(value);
         break;
       case 'price':
@@ -101,7 +105,6 @@ export default function AddCardScreen({ route, navigation }) {
     if (validateInputs()) {
       const newCard = {
         id: Date.now().toString(),
-        username,
         title,
         content,
         tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0),
@@ -110,10 +113,9 @@ export default function AddCardScreen({ route, navigation }) {
         image,
       };
 
-      handleAddCard(newCard);  
+      handleAddCard(newCard);
       navigation.navigate('HomeScreen');
 
-      setUsername('');
       setTitle('');
       setContent('');
       setTags('');
@@ -157,7 +159,7 @@ export default function AddCardScreen({ route, navigation }) {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.content}>
             <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-            {image ? (
+              {image ? (
                 <Image source={{ uri: image }} style={styles.image} />
               ) : (
                 <ImagePickerIcon />
@@ -166,25 +168,24 @@ export default function AddCardScreen({ route, navigation }) {
             <Text style={styles.label}>제목</Text>
             <TextInput
               style={[styles.input, styles.titleInput, inputErrors.title && styles.inputError]}
-              placeholder="제목"
+              placeholder="제목을 입력하세요"
               placeholderTextColor="#666"
               value={title}
               onChangeText={(value) => handleInputChange('title', value)}
-              editable
             />
             {inputErrors.title && <Text style={styles.errorText}>{inputErrors.title}</Text>}
+
             <Text style={styles.label}>본문</Text>
             <TextInput
-            style={[styles.input, styles.textArea, inputErrors.content && styles.inputError]}
-            placeholder="본문"
-            placeholderTextColor="#666"
-            value={content}
-            onChangeText={(value) => handleInputChange('content', value)}
-            multiline
-            editable
+              style={[styles.input, styles.textArea, inputErrors.content && styles.inputError]}
+              placeholder="본문"
+              placeholderTextColor="#666"
+              value={content}
+              onChangeText={(value) => handleInputChange('content', value)}
+              multiline
             />
-
             {inputErrors.content && <Text style={styles.errorText}>{inputErrors.content}</Text>}
+
             <Text style={styles.label}>해시태그</Text>
             <TextInput
               style={[styles.input, styles.tagInput, inputErrors.tags && styles.inputError]}
@@ -192,27 +193,27 @@ export default function AddCardScreen({ route, navigation }) {
               placeholderTextColor="#666"
               value={tags}
               onChangeText={(value) => handleInputChange('tags', value)}
-              editable
             />
             {inputErrors.tags && <Text style={styles.errorText}>{inputErrors.tags}</Text>}
+
             <View style={styles.rowContainer}>
               <View style={styles.inputWrapper}>
                 <Text style={styles.label}>마감일</Text>
                 <TouchableOpacity
                   style={[
-                    styles.input, 
-                    styles.inputReducedWidth, 
+                    styles.input,
+                    styles.inputReducedWidth,
                     inputErrors.date && styles.inputError,
                     { paddingHorizontal: 16, paddingVertical: 10 }
                   ]}
                   onPress={() => setShowDatePicker(true)}
                 >
-                  <Text style={{ 
-                    color: '#666', 
-                    fontSize: 16, 
-                    fontWeight: '500', 
+                  <Text style={{
+                    color: date ? '#CCC' : '#666',
+                    fontSize: 16,
+                    fontWeight: '500',
                     textAlignVertical: 'center',
-                    paddingVertical: 5, 
+                    paddingVertical: 5,
                     paddingHorizontal: 0
                   }}>
                     {date ? date.toISOString().split('T')[0].replace(/-/g, '.') : 'YYYY.MM.DD'}
@@ -220,21 +221,21 @@ export default function AddCardScreen({ route, navigation }) {
                 </TouchableOpacity>
                 {inputErrors.date && <Text style={styles.errorText}>{inputErrors.date}</Text>}
                 {showDatePicker && (
-            <View style={[styles.datePickerContainer, { width: '90%' }]}>
-                <DateTimePicker
-                value={date || new Date()}
-                mode="date"
-                display="default"
-                onChange={(event, selectedDate) => {
-                    setShowDatePicker(false);
-                    if (selectedDate) {
-                    setDate(selectedDate);
-                    }
-                }}
-                textColor="#FFF"  
-                />
-            </View>
-            )}
+                  <View style={styles.datePickerContainer}>
+                    <DateTimePicker
+                      value={date || new Date()}
+                      mode="date"
+                      display="default"
+                      onChange={(event, selectedDate) => {
+                        setShowDatePicker(false);
+                        if (selectedDate) {
+                          setDate(selectedDate);
+                        }
+                      }}
+                      textColor="#FFF"
+                    />
+                  </View>
+                )}
               </View>
               <View style={styles.inputWrapper}>
                 <Text style={styles.label}>포인트</Text>
@@ -245,7 +246,6 @@ export default function AddCardScreen({ route, navigation }) {
                   value={price}
                   onChangeText={(value) => handleInputChange('price', value)}
                   keyboardType="numeric"
-                  editable
                 />
                 {inputErrors.price && <Text style={styles.errorText}>{inputErrors.price}</Text>}
               </View>
@@ -261,7 +261,7 @@ export default function AddCardScreen({ route, navigation }) {
 }
 
 const baseTextStyle = {
-  fontFamily: 'Pretendard', 
+  fontFamily: 'Pretendard',
 };
 
 const styles = StyleSheet.create({
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    marginBottom: 30, 
+    marginBottom: 30,
   },
   image: {
     width: '100%',
@@ -324,7 +324,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   input: {
-    height: 48,
     borderColor: '#FCDC2A',
     borderWidth: 2,
     borderRadius: 8,
@@ -332,50 +331,50 @@ const styles = StyleSheet.create({
     color: '#CCC',
     backgroundColor: '#000',
     ...baseTextStyle,
-    fontSize: 16, 
+    fontSize: 16,
     fontWeight: '500',
-    lineHeight: 20, 
+    lineHeight: 20,
     marginBottom: 10,
   },
   inputError: {
     borderColor: 'red',
   },
   titleInput: {
+    height: 40, 
+  },
+  textArea: {
+    height: 300,
     color: '#CCC',
+    backgroundColor: '#000',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
     ...baseTextStyle,
-    fontSize: 16, 
+    fontSize: 16,
     fontWeight: '500',
-    lineHeight: 20, 
+    lineHeight: 20,
+    alignSelf: 'stretch',
+    textAlignVertical: 'top',
   },
   tagInput: {
     color: '#CCC',
     ...baseTextStyle,
-    fontSize: 16, 
+    fontSize: 16,
     fontWeight: '500',
-    lineHeight: 20, 
-  },
-  inputReducedWidth: {
-    width: '90%',
-    paddingHorizontal: 10,
-  },
-  textArea: {
+    lineHeight: 20,
+    height: 50,
+    paddingVertical: 10,
     borderColor: '#FCDC2A',
     borderWidth: 2,
     borderRadius: 8,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    marginBottom: 10,
-    color: '#CCC',
+    paddingHorizontal: 16,
     backgroundColor: '#000',
-    ...baseTextStyle,
-    fontSize: 16, 
-    fontWeight: '500',
-    lineHeight: 20, 
-    display: 'flex',
-    alignItems: 'flex-start',
-    flex: 1,
-    alignSelf: 'stretch',
-    paddingBottom: 200,
+    marginBottom: 10,
+  },
+  inputReducedWidth: {
+    width: '100%',
+    paddingHorizontal: 10,
+    height: 50,
+    paddingVertical: 10,
   },
   label: {
     color: '#FCFCFC',
@@ -389,10 +388,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 30,
+    alignItems: 'center',
   },
   inputWrapper: {
     flex: 1,
     marginHorizontal: 5,
+    position: 'relative',
   },
   button: {
     backgroundColor: '#FFD700',
@@ -407,7 +408,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderLeftWidth: 2,
     borderRightWidth: 2,
-    width: '100%', 
+    width: '100%',
     position: 'absolute',
     bottom: 0,
   },
@@ -425,11 +426,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   datePickerContainer: {
-    marginBottom: 10,
-    alignItems: 'flex-start',
-    justifyContent: 'center',  
-    backgroundColor: '#333',   
-    borderRadius: 45,           
-    padding: 5,                 
+    marginTop: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#333',
+    borderRadius: 8,
+    padding: 5,
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    width: '100%',
+    zIndex: 1,
   },
 });

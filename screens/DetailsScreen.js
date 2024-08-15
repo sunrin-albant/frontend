@@ -21,7 +21,7 @@ export default function DetailsScreen({ route, navigation }) {
       if (parentNavigator) {
         parentNavigator.setOptions({ tabBarStyle: { display: 'none' } });
       }
-
+  
       return () => {
         if (parentNavigator) {
           parentNavigator.setOptions({
@@ -40,6 +40,7 @@ export default function DetailsScreen({ route, navigation }) {
       };
     }, [navigation])
   );
+  
 
   const handleBackPress = () => {
     if (route.params?.from === 'Favorites') {
@@ -111,8 +112,11 @@ export default function DetailsScreen({ route, navigation }) {
         </View>
       </ScrollView>
 
-      <TouchableOpacity style={styles.chatButton} onPress={() => Alert.alert('채팅 시작')}>
-        <Text style={styles.chatButtonText}>채팅하기</Text>
+      <TouchableOpacity 
+        style={styles.chatButton} 
+        onPress={() => navigation.navigate('SubmissionScreen', { item })}
+      >
+        <Text style={styles.chatButtonText}>제출하기</Text>
       </TouchableOpacity>
     </View>
   );
