@@ -9,16 +9,19 @@ const data = [
     id: '1',
     text: "username님이 본인의 '책 잃어버렸...' 글에 양식을 제출했습니다.",
     time: '3분 전',
+    type: '제출 알림', 
   },
   {
     id: '2',
     text: "username님이 본인의 '책 잃어버렸...' 글에 양식을 제출했습니다.",
     time: '3분 전',
+    type: '제출 알림', 
   },
   {
     id: '3',
     text: "'책 잃어버렸...' 글에 제출한 내용이 채택되었습니다.",
     time: '3분 전',
+    type: '채택 알림', 
   },
 ];
 
@@ -71,12 +74,15 @@ const NotificationsScreen = () => {
   if (!fontsLoaded) {
     return null; 
   }
+  const filteredData = data.filter(item => item.type === activeTab);
 
   const renderItem = ({ item }) => (
     <View style={styles.notificationContainer}>
-      <View style={styles.icon} />
-      <Text style={styles.notificationText}>{item.text}</Text>
-      <Text style={styles.timeText}>{item.time}</Text>
+      <View style={[styles.icon, item.id === '3' && styles.squareIcon]} /> 
+      <View style={styles.textContainer}>
+        <Text style={styles.notificationText}>{item.text}</Text>
+        <Text style={styles.timeText}>{item.time}</Text>
+      </View>
     </View>
   );
 
@@ -109,7 +115,7 @@ const NotificationsScreen = () => {
       </View>
 
       <FlatList
-        data={data}
+        data={filteredData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         style={styles.list}
@@ -124,13 +130,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
   headerContainer: {
-    position: 'absolute',
-    top: 100,
-    left: 0,
-    right: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center', 
+    width: '100%',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    zIndex: 10,
+    position: 'absolute',
+    top: 40,
+    left: 0,
+    right: 0,
   },
   backButton: {
     position: 'absolute',
@@ -187,24 +197,30 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#333',
   },
   icon: {
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: '#555',
+    borderRadius: 20, 
+    backgroundColor: '#CCC', 
     marginRight: 12,
+  },
+  squareIcon: {
+    borderRadius: 8,
+  },
+  textContainer: {
+    flex: 1,
   },
   notificationText: {
     color: '#FFF',
     fontFamily: 'Pretendard-Regular',
-    flex: 1,
   },
   timeText: {
     color: '#AAA',
     fontFamily: 'Pretendard-Regular',
     fontSize: 12,
+    marginTop: 4, 
+    alignSelf: 'flex-start', 
   },
 });
 
