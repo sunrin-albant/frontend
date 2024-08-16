@@ -19,6 +19,7 @@ import AddCardScreen from './screens/AddCardScreen';
 import ProfileEditScreen from './screens/ProfileEditScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
 import SubmissionScreen from './screens/SubmissionScreen';
+import NotificationsScreen from './screens/NotificationsScreen';
 
 import HomeIcon from './components/HomeIcon';
 import ProfileIcon from './components/ProfileIcon';
@@ -42,6 +43,7 @@ function HomeStackScreen() {
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen name="Details" component={DetailsScreen} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} /> 
       <Stack.Screen
         name="AddCard"
         component={AddCardScreen}
@@ -57,6 +59,7 @@ function HomeStackScreen() {
     </Stack.Navigator>
   );
 }
+
 
 
 function ProfileStackScreen() {

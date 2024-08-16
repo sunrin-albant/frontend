@@ -6,22 +6,20 @@ import ImagePickerIcon from '../components/ImagePickerIcon';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useFocusEffect } from '@react-navigation/native';
 
-export default function SubmissionScreen({ navigation }) {
+export default function SubmissionScreen({ route, navigation }) {
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [inputErrors, setInputErrors] = useState({});
 
   useFocusEffect(
     React.useCallback(() => {
-      const parentNavigator = navigation.getParent();
-      if (parentNavigator) {
-        parentNavigator.setOptions({ tabBarStyle: { display: 'none' } });
-      }
-
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
       return () => {
-        if (parentNavigator) {
-          parentNavigator.setOptions({ tabBarStyle: { display: 'none' } }); // 하단 네비게이션 바를 숨긴 상태로 유지
-        }
+        navigation.getParent()?.setOptions({
+          tabBarStyle: { display: 'flex' },
+        });
       };
     }, [navigation])
   );
@@ -191,6 +189,7 @@ const styles = StyleSheet.create({
     width: '100%', 
     position: 'absolute',
     bottom: 0,
+    zIndex: 100, 
   },
   buttonText: {
     ...baseTextStyle,
