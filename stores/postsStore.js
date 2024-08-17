@@ -5,7 +5,7 @@ const usePostsStore = create((set) => ({
         {
             id: 1,
             username: 'user1',
-            title: 'title',
+            title: 'title1',
             tags: ['심부름', '노동'],
             date: '2022.01.24',
             price: 2000,

@@ -83,7 +83,7 @@ export default function SubmissionScreen({ route, navigation }) {
               {image ? (
                 <Image source={{ uri: image }} style={styles.image} />
               ) : (
-                <Image source={{ uri: item.image }} style={styles.image} />
+                <ImagePickerIcon />
               )}
             </TouchableOpacity>
             <TextInput
