@@ -20,6 +20,7 @@ import ProfileEditScreen from './screens/ProfileEditScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
 import SubmissionScreen from './screens/SubmissionScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
+import SubmittedJobsScreen from './screens/SubmittedJobsScreen';
 
 import HomeIcon from './components/HomeIcon';
 import ProfileIcon from './components/ProfileIcon';
@@ -68,6 +69,8 @@ function ProfileStackScreen() {
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
       <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
+      <Stack.Screen name="SubmittedJobsScreen" component={SubmittedJobsScreen} />
+      
     </Stack.Navigator>
   );
 }

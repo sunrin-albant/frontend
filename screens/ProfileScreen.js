@@ -89,8 +89,16 @@ const ActivitySection = ({ navigation }) => (
       text="관심 목록" 
       navigateTo={() => navigation.navigate('FavoritesScreen', { favoriteCards: [] })}
     />
-    <ActivityItem icon="check-circle-outline" text="제출한 알바" />
-    <ActivityItem icon="clipboard-check-outline" text="채택된 알바" />
+    <ActivityItem 
+      icon="check-circle-outline" 
+      text="제출한 알바" 
+      navigateTo={() => navigation.navigate('SubmittedJobsScreen', { submittedJobs : [] })}
+    />
+    <ActivityItem 
+      icon="clipboard-check-outline" 
+      text="채택된 알바" 
+      navigateTo={() => console.log('채택된 알바 화면으로 이동')}
+    />
   </View>
 );
 

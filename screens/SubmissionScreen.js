@@ -5,11 +5,14 @@ import BackIcon from '../components/BackIcon';
 import ImagePickerIcon from '../components/ImagePickerIcon';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useFocusEffect } from '@react-navigation/native';
+import useSubmittedJobsStore from '../stores/submittedJobsStore';
 
 export default function SubmissionScreen({ route, navigation }) {
+  const { item } = route.params; 
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [inputErrors, setInputErrors] = useState({});
+  const addSubmittedJob = useSubmittedJobsStore((state) => state.addSubmittedJob);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -46,12 +49,22 @@ export default function SubmissionScreen({ route, navigation }) {
 
   const handleSubmit = () => {
     if (validateInputs()) {
+      const newJob = {
+        ...item,
+        content: content,  
+        image: image || item.image,  
+        submittedDate: new Date().toLocaleDateString(),  
+        deadline: item.deadline, 
+      };
+  
+      addSubmittedJob(newJob);  
       Alert.alert('성공', '제출되었습니다.');
-      navigation.goBack();
+      navigation.goBack(); 
     } else {
       Alert.alert('오류', '모든 필드를 올바르게 입력해주세요.');
     }
   };
+  
 
   return (
     <View style={styles.container}>
@@ -70,7 +83,7 @@ export default function SubmissionScreen({ route, navigation }) {
               {image ? (
                 <Image source={{ uri: image }} style={styles.image} />
               ) : (
-                <ImagePickerIcon />
+                <Image source={{ uri: item.image }} style={styles.image} />
               )}
             </TouchableOpacity>
             <TextInput
@@ -91,7 +104,6 @@ export default function SubmissionScreen({ route, navigation }) {
     </View>
   );
 }
-
 const baseTextStyle = {
   fontFamily: 'Pretendard', 
 };
