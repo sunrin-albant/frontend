@@ -46,7 +46,7 @@ const SubmittedJobItem = ({ item }) => {
       <View style={styles.footer}>
         <View style={styles.dateContainer}>
           <CalendarIcon style={styles.calendarIcon} />
-          <Text style={styles.date}>{item.deadline ? `${item.deadline}까지` : '날짜 정보 없음'}</Text>
+          <Text style={styles.date}> {item.date}까지</Text>
         </View>
         <View style={styles.priceContainer}>
           <Image source={require('../assets/Coin.png')} style={styles.coinImageSmall} />
