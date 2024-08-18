@@ -20,7 +20,7 @@ export default function ProfileScreen() {
   const displayGeneration = generation ? generation : '기수';
 
   const navigateToProfileEdit = () => {
-    navigation.navigate('ProfileEdit');
+    navigation.navigate('ProfileEditScreen');
   };
 
   const handleLogout = () => {
