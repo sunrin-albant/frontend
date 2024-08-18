@@ -263,7 +263,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Regular',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center', 
+    marginTop: '50%', 
   },
+
   coinImageSmall: {
     width: 20,
     height: 20,

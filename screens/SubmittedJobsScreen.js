@@ -266,10 +266,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   noJobsText: {
+    flex: 1,
     color: '#fff',
+    textAlign: 'center',
     fontSize: 16,
     fontFamily: 'Pretendard-Regular',
-    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center', 
+    marginTop: '50%', 
   },
   coinImageSmall: {
     width: 20,
