@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import BackIcon from '../components/BackIcon';
@@ -21,33 +21,28 @@ export default function DetailsScreen({ route, navigation }) {
       if (parentNavigator) {
         parentNavigator.setOptions({ tabBarStyle: { display: 'none' } });
       }
-  
-      return () => {
-        if (parentNavigator) {
-          parentNavigator.setOptions({
-            tabBarStyle: {
-              backgroundColor: 'black',
-              borderTopColor: '#FCDC2A',
-              borderTopWidth: 2,
-              borderTopLeftRadius: 15,
-              borderTopRightRadius: 15,
-              height: 70,
-              paddingBottom: 10,
-              display: 'flex',
-            },
-          });
-        }
-      };
     }, [navigation])
   );
-  
 
   const handleBackPress = () => {
-    if (route.params?.from === 'Favorites') {
-      navigation.goBack();
-    } else {
-      navigation.goBack();
+    const parentNavigator = navigation.getParent();
+
+    if (parentNavigator) {
+      parentNavigator.setOptions({
+        tabBarStyle: {
+          backgroundColor: 'black',
+          borderTopColor: '#FCDC2A',
+          borderTopWidth: 2,
+          height: 70,
+          paddingBottom: 10,
+          display: 'flex',
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
+        },
+      });
     }
+
+    navigation.goBack();
   };
 
   return (

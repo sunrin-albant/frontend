@@ -6,8 +6,8 @@ import ImagePickerIcon from '../components/ImagePickerIcon';
 import { useFocusEffect } from '@react-navigation/native';
 import useSubmittedJobsStore from '../stores/submittedJobsStore';
 
-export default function SubmissionScreen({ route, navigation }) {
-  const { item } = route.params; 
+export default function SubmissionDetailScreen({ route, navigation }) {
+  const { item } = route.params;
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [inputErrors, setInputErrors] = useState({});
@@ -15,7 +15,7 @@ export default function SubmissionScreen({ route, navigation }) {
 
   useFocusEffect(
     React.useCallback(() => {
-      const parentNavigator = navigation.getParent(); 
+      const parentNavigator = navigation.getParent();
 
       if (parentNavigator) {
         parentNavigator.setOptions({ tabBarStyle: { display: 'none' } });
@@ -47,20 +47,20 @@ export default function SubmissionScreen({ route, navigation }) {
     if (validateInputs()) {
       const newJob = {
         ...item,
-        content: content,  
-        image: image || item.image,  
-        submittedDate: new Date().toLocaleDateString(),  
-        deadline: item.deadline, 
+        content: content,
+        image: image || item.image,
+        submittedDate: new Date().toLocaleDateString(),
+        deadline: item.deadline,
       };
-  
-      addSubmittedJob(newJob);  
+
+      addSubmittedJob(newJob);
       Alert.alert('성공', '제출되었습니다.');
-      navigation.goBack(); 
+      navigation.goBack();
     } else {
       Alert.alert('오류', '모든 필드를 올바르게 입력해주세요.');
     }
   };
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -95,14 +95,14 @@ export default function SubmissionScreen({ route, navigation }) {
         </ScrollView>
       </KeyboardAvoidingView>
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>제출하기</Text>
+        <Text style={styles.buttonText}>채택하기</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
 const baseTextStyle = {
-  fontFamily: 'Pretendard', 
+  fontFamily: 'Pretendard',
 };
 
 const styles = StyleSheet.create({
@@ -126,7 +126,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     backgroundColor: '#000',
-    zIndex: 10,
   },
   coinContainer: {
     flexDirection: 'row',
@@ -155,7 +154,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    marginBottom: 30, 
+    marginBottom: 30,
   },
   image: {
     width: '100%',
@@ -170,9 +169,9 @@ const styles = StyleSheet.create({
     color: '#CCC',
     backgroundColor: '#000',
     ...baseTextStyle,
-    fontSize: 16, 
+    fontSize: 16,
     fontWeight: '500',
-    lineHeight: 20, 
+    lineHeight: 20,
     marginBottom: 10,
   },
   inputError: {
@@ -185,9 +184,9 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 15,
     ...baseTextStyle,
-    fontSize: 16, 
+    fontSize: 16,
     fontWeight: '500',
-    lineHeight: 20, 
+    lineHeight: 20,
     alignSelf: 'stretch',
     textAlignVertical: 'top',
   },
@@ -204,10 +203,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderLeftWidth: 2,
     borderRightWidth: 2,
-    width: '100%', 
+    width: '100%',
     position: 'absolute',
     bottom: 0,
-    zIndex: 100, 
+    zIndex: 100,
   },
   buttonText: {
     ...baseTextStyle,

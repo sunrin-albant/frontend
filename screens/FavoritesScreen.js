@@ -103,11 +103,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
   headerTitle: {
+    color: '#fff',
     fontSize: 18,
-    color: 'white',
     fontWeight: 'bold',
-    flex: 1,
     textAlign: 'center',
+    flex: 1,
+    marginRight: -58,
+    fontFamily: 'Pretendard-Bold',
   },
   headerIcons: {
     flexDirection: 'row',

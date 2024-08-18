@@ -70,7 +70,7 @@ const ProfileImageScreen = () => {
           <BackIcon />
         </TouchableOpacity>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>프로필 수정하기</Text>
+          <Text style={styles.title}>프로필 수정</Text>
         </View>
       </View>
 
@@ -129,9 +129,9 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   headerContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column', 
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center', 
     width: '100%',
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -144,13 +144,11 @@ const styles = StyleSheet.create({
   backButton: {
     position: 'absolute',
     left: 20,
-  },
-  titleContainer: {
-    alignItems: 'center',
+    top: 10, 
   },
   title: {
     color: '#FFF',
-    fontFamily: 'Pretendard',
+    fontFamily: 'Pretendard-Bold',
     fontSize: 20,
     fontWeight: '700',
     textAlign: 'center',

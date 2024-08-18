@@ -46,44 +46,61 @@ const NotificationsScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
       const parentNavigator = navigation.getParent();
+
       if (parentNavigator) {
         parentNavigator.setOptions({ tabBarStyle: { display: 'none' } });
       }
 
-      return () => {
-        if (parentNavigator) {
-          parentNavigator.setOptions({
-            tabBarStyle: {
-              backgroundColor: 'black',
-              borderTopColor: '#FCDC2A',
-              borderTopWidth: 2,
-              height: 70,
-              paddingBottom: 10,
-              display: 'flex',
-            },
-          });
-        }
-      };
     }, [navigation])
   );
 
   const handleBack = () => {
+    const parentNavigator = navigation.getParent();
+
+    if (parentNavigator) {
+      parentNavigator.setOptions({
+        tabBarStyle: {
+          backgroundColor: 'black',
+          borderTopColor: '#FCDC2A',
+          borderTopWidth: 2,
+          height: 70,
+          paddingBottom: 10,
+          display: 'flex',
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
+        },
+      });
+    }
+
     navigation.goBack();
   };
 
+  const handleNotificationPress = (item) => {
+    const parentNavigator = navigation.getParent();
+    if (parentNavigator) {
+      parentNavigator.setOptions({ tabBarStyle: { display: 'none' } });
+    }
+
+    navigation.navigate('SubmissionDetailScreen', { submissionId: item.id });
+  };
+
   if (!fontsLoaded) {
-    return null; 
+    return null;
   }
+
   const filteredData = data.filter(item => item.type === activeTab);
 
   const renderItem = ({ item }) => (
-    <View style={styles.notificationContainer}>
+    <TouchableOpacity 
+      style={styles.notificationContainer} 
+      onPress={() => handleNotificationPress(item)} 
+    >
       <View style={[styles.icon, item.id === '3' && styles.squareIcon]} /> 
       <View style={styles.textContainer}>
         <Text style={styles.notificationText}>{item.text}</Text>
         <Text style={styles.timeText}>{item.time}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

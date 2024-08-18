@@ -61,23 +61,13 @@ const SubmittedJobsScreen = () => {
   const navigation = useNavigation();
   const submittedJobs = useSubmittedJobsStore((state) => state.submittedJobs);
 
+  const handleBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <MaterialIcons name="arrow-back-ios" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>제출한 알바</Text>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-            <MaterialIcons name="search" size={24} color="white" style={styles.icon} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
-            <MaterialIcons name="notifications-none" size={24} color="white" style={styles.icon} />
-          </TouchableOpacity>
-        </View>
-      </View>
-
+      <Header handleBack={handleBack} />
       {submittedJobs.length > 0 ? (
         <FlatList
           data={submittedJobs}
@@ -87,19 +77,35 @@ const SubmittedJobsScreen = () => {
           style={styles.list}
         />
       ) : (
-        <Text style={styles.noJobsText}>제출한 알바가 없습니다.</Text>
+        <View style={styles.centeredView}>
+          <Text style={styles.noJobsText}>제출한 알바가 없습니다.</Text>
+        </View>
       )}
     </View>
   );
 };
 
+const Header = ({ handleBack }) => (
+  <View style={styles.header}>
+    <TouchableOpacity onPress={handleBack}>
+      <MaterialIcons name="arrow-back-ios" size={24} color="white" />
+    </TouchableOpacity>
+    <Text style={styles.pageTitle}>제출한 알바</Text>
+    <View style={styles.headerIcons}>
+      <TouchableOpacity>
+        <MaterialIcons name="search" size={24} color="white" style={styles.icon} />
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <MaterialIcons name="notifications-none" size={24} color="white" style={styles.icon} />
+      </TouchableOpacity>
+    </View>
+  </View>
+);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    paddingTop: 40,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
   },
   header: {
     flexDirection: 'row',
@@ -109,25 +115,29 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     backgroundColor: '#000',
+    marginTop: 40,
   },
-  headerTitle: {
+  pageTitle: {
+    color: '#fff',
     fontSize: 18,
-    color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
     flex: 1,
+    marginRight: -58,
+    fontFamily: 'Pretendard-Bold',
   },
   headerIcons: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   icon: {
-    marginLeft: 15,
+    marginLeft: 15, 
   },
   contentContainer: {
     paddingBottom: 100,
     alignItems: 'flex-start',
     paddingHorizontal: 20,
+    paddingTop: 54,
   },
   list: {
     flex: 1,
@@ -250,14 +260,16 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     marginRight: 12,
   },
-  noJobsText: {
+  centeredView: { 
     flex: 1,
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 16,
-    fontFamily: 'Pretendard-Regular',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  noJobsText: {
+    color: '#fff',
+    fontSize: 16,
+    fontFamily: 'Pretendard-Regular',
+    textAlign: 'center',
   },
   coinImageSmall: {
     width: 20,

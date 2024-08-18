@@ -21,6 +21,7 @@ import FavoritesScreen from './screens/FavoritesScreen';
 import SubmissionScreen from './screens/SubmissionScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 import SubmittedJobsScreen from './screens/SubmittedJobsScreen';
+import SubmissionDetailScreen from './screens/SubmissionDetailScreen';
 
 import HomeIcon from './components/HomeIcon';
 import ProfileIcon from './components/ProfileIcon';
@@ -57,6 +58,7 @@ function HomeStackScreen() {
         component={SubmissionScreen} 
         options={{ tabBarStyle: { display: 'none' } }} 
       /> 
+      <Stack.Screen name="SubmissionDetailScreen" component={SubmissionDetailScreen} /> 
     </Stack.Navigator>
   );
 }
