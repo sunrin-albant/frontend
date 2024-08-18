@@ -4,6 +4,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';;
 import BackIcon from '../components/BackIcon'; 
 import CameraIcon from '../components/CameraIcon'; 
+import styles from '../styles/ProfileEditScreenStyles';
 
 const ProfileImageScreen = () => {
   const [profileImage, setProfileImage] = useState('https://via.placeholder.com/150');
@@ -118,113 +119,5 @@ const ProfileImageScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 40,
-  },
-  headerContainer: {
-    flexDirection: 'column', 
-    alignItems: 'center',
-    justifyContent: 'center', 
-    width: '100%',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    zIndex: 10,
-    position: 'absolute',
-    top: 40,
-    left: 0,
-    right: 0,
-  },
-  backButton: {
-    position: 'absolute',
-    left: 20,
-    top: 10, 
-  },
-  title: {
-    color: '#FFF',
-    fontFamily: 'Pretendard-Bold',
-    fontSize: 20,
-    fontWeight: '700',
-    textAlign: 'center',
-  },
-  imageContainer: {
-    position: 'relative',
-    marginBottom: 20,
-    marginTop: 160,
-    alignItems: 'center',
-  },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60, 
-    backgroundColor: '#444',
-  },
-  cameraIconContainer: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#424242',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputContainer: {
-    marginTop: 20,
-    width: '100%',
-  },
-  label: {
-    color: 'white',
-    marginBottom: 10,
-  },
-  spacing: {
-    marginTop: 20,
-  },
-  input: {
-    backgroundColor: 'black',
-    borderWidth: 2,
-    borderColor: 'rgba(233, 234, 236, 0.80)',
-    color: 'white',
-    padding: 10,
-    borderRadius: 8,
-    height: 40,
-  },
-  secureInput: {
-    backgroundColor: 'black',
-    color: 'white',
-  },
-  nextButton: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#FFD700',
-    height: 70,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderTopColor: '#000',
-    borderLeftColor: '#000',
-    borderRightColor: '#000',
-    borderTopWidth: 2,
-    borderLeftWidth: 2,
-    borderRightWidth: 2,
-  },
-  nextButtonText: {
-    color: '#333',
-    fontSize: 32,
-    fontWeight: '600',
-    textAlign: 'center',
-    lineHeight: 40,
-  },
-});
 
 export default ProfileImageScreen;
