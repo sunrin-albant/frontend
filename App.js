@@ -69,10 +69,10 @@ function ProfileStackScreen() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, ...TransitionPresets.SlideFromRightIOS }}>
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-      <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
+      <Stack.Screen name="ProfileEditScreen" component={ProfileEditScreen} />
       <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
       <Stack.Screen name="SubmittedJobsScreen" component={SubmittedJobsScreen} />
-      
+      <Stack.Screen name="SearchScreen" component={SearchScreen} />
     </Stack.Navigator>
   );
 }

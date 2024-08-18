@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center', 
-    marginTop: '50%', 
+    marginTop: '10%', 
   },
 
   coinImageSmall: {

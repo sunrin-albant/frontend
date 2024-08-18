@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -9,8 +9,8 @@ const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.9;
 
 const SubmittedJobItem = ({ item }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [favoriteCount, setFavoriteCount] = useState(item.favoriteCount || 0);
+  const [isFavorite, setIsFavorite] = React.useState(false);
+  const [favoriteCount, setFavoriteCount] = React.useState(item.favoriteCount || 0);
 
   const toggleFavorite = () => {
     if (isFavorite) {
@@ -65,9 +65,13 @@ const SubmittedJobsScreen = () => {
     navigation.goBack();
   };
 
+  const handleSearchPress = () => {
+    navigation.navigate('SearchScreen', { data: submittedJobs });
+  };
+
   return (
     <View style={styles.container}>
-      <Header handleBack={handleBack} />
+      <Header handleBack={handleBack} navigation={navigation} onSearchPress={handleSearchPress} />
       {submittedJobs.length > 0 ? (
         <FlatList
           data={submittedJobs}
@@ -85,17 +89,17 @@ const SubmittedJobsScreen = () => {
   );
 };
 
-const Header = ({ handleBack }) => (
+const Header = ({ handleBack, navigation, onSearchPress }) => (
   <View style={styles.header}>
     <TouchableOpacity onPress={handleBack}>
       <MaterialIcons name="arrow-back-ios" size={24} color="white" />
     </TouchableOpacity>
     <Text style={styles.pageTitle}>제출한 알바</Text>
     <View style={styles.headerIcons}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={onSearchPress}>
         <MaterialIcons name="search" size={24} color="white" style={styles.icon} />
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
         <MaterialIcons name="notifications-none" size={24} color="white" style={styles.icon} />
       </TouchableOpacity>
     </View>
@@ -274,7 +278,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center', 
-    marginTop: '50%', 
+    marginTop: '24%', 
   },
   coinImageSmall: {
     width: 20,

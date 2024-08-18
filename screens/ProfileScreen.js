@@ -37,6 +37,7 @@ export default function ProfileScreen() {
           department={displayDepartment} 
           generation={displayGeneration} 
         />
+        
         <TouchableOpacity style={styles.profileButton} onPress={navigateToProfileEdit}>
           <Text style={styles.profileButtonText}>프로필 수정</Text>
         </TouchableOpacity>
@@ -55,14 +56,18 @@ export default function ProfileScreen() {
   );
 }
 
-const Header = () => (
-  <View style={styles.header}>
-    <Text style={styles.pageTitle}>마이페이지</Text>
-    <TouchableOpacity>
-      <MaterialIcons name="notifications-none" size={24} color="white" />
-    </TouchableOpacity>
-  </View>
-);
+const Header = () => {
+  const navigation = useNavigation();
+
+  return (
+    <View style={styles.header}>
+      <Text style={styles.pageTitle}>마이페이지</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+        <MaterialIcons name="notifications-none" size={24} color="white" />
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const ProfileInfo = ({ profileImage, name, department, generation }) => (
   <View style={styles.profileInfo}>
