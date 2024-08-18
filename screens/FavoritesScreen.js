@@ -14,6 +14,10 @@ const FavoritesScreen = () => {
 
   const favoriteCards = posts.filter(post => post.isFavorite);
 
+  const handleSearchPress = () => {
+    navigation.navigate('SearchScreen', { data: favoriteCards });
+  };
+
   const renderItem = ({ item }) => (
     <TouchableOpacity 
       style={styles.card} 
@@ -60,7 +64,7 @@ const FavoritesScreen = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>관심목록</Text>
         <View style={styles.headerIcons}>
-          <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+          <TouchableOpacity onPress={handleSearchPress}>
             <MaterialIcons name="search" size={24} color="white" style={styles.icon} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>

@@ -68,6 +68,7 @@ const SubmittedJobsScreen = () => {
   const handleSearchPress = () => {
     navigation.navigate('SearchScreen', { data: submittedJobs });
   };
+  
 
   return (
     <View style={styles.container}>

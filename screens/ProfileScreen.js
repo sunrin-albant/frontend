@@ -63,8 +63,8 @@ const Header = () => {
     <View style={styles.header}>
       <Text style={styles.pageTitle}>마이페이지</Text>
       <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
-        <MaterialIcons name="notifications-none" size={24} color="white" />
-      </TouchableOpacity>
+            <MaterialIcons name="notifications-none" size={24} color="white" style={styles.icon} />
+          </TouchableOpacity>
     </View>
   );
 };

@@ -45,6 +45,10 @@ export default function DetailsScreen({ route, navigation }) {
     navigation.goBack();
   };
 
+  const handleNotificationPress = () => {
+    navigation.navigate('Notifications');  
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.imageHeader}>
@@ -57,7 +61,7 @@ export default function DetailsScreen({ route, navigation }) {
             <Image source={require('../assets/Coin.png')} style={styles.coinIcon} />
             <Text style={styles.coinText}>14,000</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleNotificationPress}>
             <MaterialIcons name="notifications-none" size={24} color="white" />
           </TouchableOpacity>
         </View>
