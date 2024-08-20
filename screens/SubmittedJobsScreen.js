@@ -69,11 +69,14 @@ const SubmittedJobsScreen = () => {
   const handleSearchPress = () => {
     navigation.navigate('SearchScreen', { data: submittedJobs });
   };
-  
+
+  const handleNotificationPress = () => {
+    navigation.navigate('NotificationsScreen');
+  };
 
   return (
     <View style={styles.container}>
-      <Header handleBack={handleBack} navigation={navigation} onSearchPress={handleSearchPress} />
+      <Header handleBack={handleBack} navigation={navigation} onSearchPress={handleSearchPress} onNotificationPress={handleNotificationPress} />
       {submittedJobs.length > 0 ? (
         <FlatList
           data={submittedJobs}
@@ -91,7 +94,7 @@ const SubmittedJobsScreen = () => {
   );
 };
 
-const Header = ({ handleBack, navigation, onSearchPress }) => (
+const Header = ({ handleBack, navigation, onSearchPress, onNotificationPress }) => (
   <View style={styles.header}>
     <TouchableOpacity onPress={handleBack}>
       <MaterialIcons name="arrow-back-ios" size={24} color="white" />
@@ -101,12 +104,11 @@ const Header = ({ handleBack, navigation, onSearchPress }) => (
       <TouchableOpacity onPress={onSearchPress}>
         <MaterialIcons name="search" size={24} color="white" style={styles.icon} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+      <TouchableOpacity onPress={onNotificationPress}>
         <MaterialIcons name="notifications-none" size={24} color="white" style={styles.icon} />
       </TouchableOpacity>
     </View>
   </View>
 );
-
 
 export default SubmittedJobsScreen;

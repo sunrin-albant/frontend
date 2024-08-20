@@ -27,6 +27,7 @@ import HomeIcon from './components/HomeIcon';
 import ProfileIcon from './components/ProfileIcon';
 import AddIcon from './components/AddIcon';
 import usePostsStore from './stores/postsStore';
+import AcceptedJobsScreen from './screens/AcceptedJobsScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -62,18 +63,20 @@ function HomeStackScreen() {
     </Stack.Navigator>
   );
 }
-
 function ProfileStackScreen() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, ...TransitionPresets.SlideFromRightIOS }}>
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="ProfileEditScreen" component={ProfileEditScreen} />
       <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
-      <Stack.Screen name="SearchScreen" component={SearchScreen} />
       <Stack.Screen name="SubmittedJobsScreen" component={SubmittedJobsScreen} />
+      <Stack.Screen name="AcceptedJobsScreen" component={AcceptedJobsScreen} />
+      <Stack.Screen name="SearchScreen" component={SearchScreen} />
+      <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} /> 
     </Stack.Navigator>
   );
 }
+
 
 function MainTabNavigator({ navigation }) {
   const { posts, setPosts } = usePostsStore();

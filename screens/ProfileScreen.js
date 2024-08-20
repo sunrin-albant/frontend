@@ -103,7 +103,7 @@ const ActivitySection = ({ navigation }) => (
     <ActivityItem 
       icon="clipboard-check-outline" 
       text="채택된 알바" 
-      navigateTo={() => console.log('채택된 알바 화면으로 이동')}
+      navigateTo={() => navigation.navigate('AcceptedJobsScreen', {acceptedJobs : []})}
     />
   </View>
 );
